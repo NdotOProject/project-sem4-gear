@@ -10,33 +10,37 @@ class ImageWidget extends StatelessWidget {
     this.width = 50,
   });
 
-  final String imageUrl;
+  final String? imageUrl;
   final Image fallbackImage;
   final double width;
   final double height;
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
+    return SizedBox(
       height: height,
       width: width,
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-      placeholder: (context, url) => SizedBox(
-        width: width < 50 ? width : 50,
-        height: height < 50 ? height : 50,
-        child: const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      ),
-      errorWidget: (context, url, error) => fallbackImage,
+      child: imageUrl == null
+          ? fallbackImage
+          : CachedNetworkImage(
+              imageUrl: imageUrl!,
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              placeholder: (context, url) => SizedBox(
+                width: width < 50 ? width : 50,
+                height: height < 50 ? height : 50,
+                child: const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+              ),
+              errorWidget: (context, url, error) => fallbackImage,
+            ),
     );
   }
 }

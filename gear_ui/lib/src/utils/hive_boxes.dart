@@ -25,4 +25,8 @@ class HiveBoxes {
       await Hive.deleteBoxFromDisk(productsBoxName);
     }
   }
+
+  static Future<int> clearBox<T>(Box<T> box) async {
+    return await box.clear();
+  }
 }

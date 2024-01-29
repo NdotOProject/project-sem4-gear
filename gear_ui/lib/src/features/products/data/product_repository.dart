@@ -85,37 +85,48 @@ class ProductRepository {
     if (param != null) {
       final cachedProducts = products.values.toList();
       if (cachedProducts.length <= param.offset) {
-        // TODO: call api with pagination
+        // TODO: call api with pagination -> update cache values
 
-        // update cache values
         await products
             .putAll({for (var product in response) product.id: product});
         return response;
       } else {
-        // get from cache
+        // get from cached
         return cachedProducts
             .getRange(param.offset, param.page * param.size)
             .toList();
       }
     } else {
-      // TODO: call api without pagination
-      // cache values
+      // TODO: call api without pagination -> update cache values
+
       await products
           .putAll({for (var product in response) product.id: product});
       return response;
     }
   }
 
-  Future<Product> findById(int id) async {
+  Future<Product?> findById(int id) async {
     final products = await HiveBoxes.products;
-    return products.get(id) ??
-        // TODO: throw error
-        Product(
-          categoryId: 1,
-          brandId: 1,
-          code: "code",
-          name: "name",
-          price: 1,
-        );
+    Product? product = products.get(id);
+    if (product == null) {
+      // TODO: call api -> replace for product
+    }
+    return product;
+  }
+
+  Future<List<Product>> findByName(
+    String name, {
+    int maxResultCount = 5,
+  }) async {
+    final products = await HiveBoxes.products;
+    List<Product> result = products.values.where((product) {
+      return product.name.toLowerCase().contains(name.toLowerCase());
+    }).toList();
+
+    if (result.length < maxResultCount) {
+      // TODO: call api -> add to result -> update cached
+    }
+
+    return result;
   }
 }
