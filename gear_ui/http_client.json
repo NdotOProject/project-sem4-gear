@@ -1,0 +1,5 @@
+{
+  "baseUrl": "localhost:8080/api",
+  "endpoints": {
+  }
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+// internal packages
 import 'package:gear_ui/src/features/products/data/product_repository.dart';
 import 'package:gear_ui/src/features/products/domain/product.dart';
 import 'package:gear_ui/src/layouts/children_page_layout.dart';
@@ -22,29 +24,26 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void initState() {
-    _debounce = Debounce<String>(onChange: () {
-      _productRepository
-          .findByName(
-            _searchInputController.text,
-          )
-          .then(
-            (products) => setState(() {
+    _debounce = Debounce<String>(
+      onChange: () {
+        _productRepository.findByName(_searchInputController.text).then(
+          (products) {
+            setState(() {
               _searchResult.products = products;
-            }),
-          );
+            });
+          },
+        );
+      },
+    );
 
-      return _searchInputController.text;
-    });
-
-    _searchInputController.text = _debounce!.value ?? "";
-    _searchInputController.addListener(_debounce());
+    _searchInputController.addListener(_debounce!);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _searchInputController.removeListener(_debounce!());
+    _searchInputController.removeListener(_debounce!);
     _searchInputController.dispose();
     _debounce.cancel();
 
@@ -54,7 +53,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return ChildrenPageLayout(
-      title: Text(_debounce?.value ?? ""),
       body: Padding(
         padding: const EdgeInsets.only(
           left: 8.0,
@@ -130,7 +128,5 @@ class _SearchPageState extends State<SearchPage> {
 class _SearchResult {
   _SearchResult();
 
-  static const _emptyProducts = <Product>[];
-
-  List<Product> products = _emptyProducts;
+  List<Product> products = <Product>[];
 }

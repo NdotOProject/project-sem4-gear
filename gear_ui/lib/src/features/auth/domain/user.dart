@@ -1,5 +1,5 @@
 class User {
-  int id;
+  int? id;
   String name;
   String email;
   String password;
@@ -8,12 +8,12 @@ class User {
   bool status;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
-    required this.avatar,
-    required this.employee,
     required this.password,
-    required this.status,
+    required this.avatar,
+    this.employee = false,
+    this.status = true,
   });
 }

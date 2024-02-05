@@ -1,30 +1,22 @@
 import 'dart:async';
-import 'dart:ui';
 
 class Debounce<T> {
   Debounce({
-    required T Function() onChange,
+    required void Function() onChange,
     this.delay = 500,
-    T? init,
-  })  : _handleOnChange = onChange,
-        _value = init;
+  }) : _handleOnChange = onChange;
 
   final int delay;
 
-  final T Function() _handleOnChange;
+  final void Function() _handleOnChange;
   Timer? _timer;
-  T? _value;
 
-  T? get value => _value;
-
-  VoidCallback call() => () {
-        if (_timer?.isActive ?? false) {
-          _timer?.cancel();
-        }
-        _timer = Timer(Duration(milliseconds: delay), () {
-          _value = _handleOnChange();
-        });
-      };
+  void call() {
+    if (_timer?.isActive ?? false) {
+      _timer?.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: delay), _handleOnChange);
+  }
 
   void cancel() {
     _timer?.cancel();

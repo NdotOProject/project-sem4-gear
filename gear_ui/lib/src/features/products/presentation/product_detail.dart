@@ -34,6 +34,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Widget build(BuildContext context) {
     return _product == null
         ? NotFoundPage(
+            childrenPage: true,
             message: "Product with id: ${widget.productId} does not exists!",
           )
         : ChildrenPageLayout(

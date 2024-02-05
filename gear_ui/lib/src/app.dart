@@ -42,7 +42,7 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
     return MaterialApp.router(
       title: "Gear",
       debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter().config,
+      routerConfig: AppRouter.config,
     );
   }
 }

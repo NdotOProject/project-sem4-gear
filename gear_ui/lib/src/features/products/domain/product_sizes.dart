@@ -20,7 +20,7 @@ enum ProductSizes {
     value: "xl",
   ),
   xxl(
-    name: "Ex",
+    name: "Double Extra Large",
     value: "2xl",
   ),
   ;
