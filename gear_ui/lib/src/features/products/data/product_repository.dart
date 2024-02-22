@@ -15,6 +15,8 @@ class ProductRepository {
         brandId: 1,
         code: "PRO01",
         name: "Adidas Predator 20.3",
+        description: "abchk ahfjka ahdasl ashdjkashg akjshduakj dahdkja"
+            " asjkhfkas  jk ashfksdk jsdhslg s  ghfdjkhgl sgfs ",
         price: 200,
       ),
       Product(
@@ -46,7 +48,7 @@ class ProductRepository {
         categoryId: 1,
         brandId: 1,
         code: "PRO05",
-        name: "GHI",
+        name: "GHI 05",
         price: 149,
       ),
       Product(
@@ -54,7 +56,7 @@ class ProductRepository {
         categoryId: 1,
         brandId: 1,
         code: "PRO05",
-        name: "GHI",
+        name: "GHI 06",
         price: 149,
       ),
       Product(
@@ -62,7 +64,7 @@ class ProductRepository {
         categoryId: 1,
         brandId: 1,
         code: "PRO05",
-        name: "GHI",
+        name: "GHI 07",
         price: 149,
       ),
       Product(
@@ -70,7 +72,7 @@ class ProductRepository {
         categoryId: 1,
         brandId: 1,
         code: "PRO05",
-        name: "GHI",
+        name: "GHI 08",
         price: 149,
       ),
       Product(
@@ -78,7 +80,15 @@ class ProductRepository {
         categoryId: 1,
         brandId: 1,
         code: "PRO05",
-        name: "GHI",
+        name: "GHI 09",
+        price: 149,
+      ),
+      Product(
+        id: 10,
+        categoryId: 1,
+        brandId: 1,
+        code: "PRO05",
+        name: "GHI 10",
         price: 149,
       ),
     ];

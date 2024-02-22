@@ -10,12 +10,10 @@ class Application extends StatefulWidget {
 }
 
 class _ApplicationState extends State<Application> with WidgetsBindingObserver {
-  AppLifecycleState? _lastLifecycleState;
-
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -26,19 +24,13 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      _lastLifecycleState = state;
-    });
+    if (state == AppLifecycleState.inactive) {
+      HiveBoxes.closeApp();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_lastLifecycleState == null) {
-      // print("on active");
-    } else {
-      HiveBoxes.closeApp();
-    }
-
     return MaterialApp.router(
       title: "Gear",
       debugShowCheckedModeBanner: false,

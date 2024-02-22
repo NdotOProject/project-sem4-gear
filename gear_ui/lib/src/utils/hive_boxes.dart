@@ -1,10 +1,13 @@
+// external packages
+import 'package:hive/hive.dart';
+
+// internal packages
 import 'package:gear_ui/src/configurations/hive_config.dart';
 import 'package:gear_ui/src/features/products/domain/product.dart';
-import 'package:hive/hive.dart';
 
 class HiveBoxes {
   static Future<Box<E>> _getBox<E>(String name) async {
-    return Hive.isBoxOpen(name)
+    return await Hive.boxExists(name) && Hive.isBoxOpen(name)
         ? Hive.box<E>(name)
         : await Hive.openBox<E>(name);
   }

@@ -25,6 +25,7 @@ dependencies:
   sqflite: ^2.3.0
   sqflite_common_ffi: ^2.3.1
   strings: 2.0.3
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

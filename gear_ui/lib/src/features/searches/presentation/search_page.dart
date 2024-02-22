@@ -16,7 +16,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  static const _productRepository = ProductRepository();
+  // static const _productRepository = ProductRepository();
   final _searchInputController = TextEditingController();
   bool _inputHasContent = false;
   final _SearchResult _searchResult = _SearchResult();
@@ -26,13 +26,13 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     _debounce = Debounce<String>(
       onChange: () {
-        _productRepository.findByName(_searchInputController.text).then(
-          (products) {
-            setState(() {
-              _searchResult.products = products;
-            });
-          },
-        );
+        // _productRepository.findByName(_searchInputController.text).then(
+        //   (products) {
+        //     setState(() {
+        //       _searchResult.products = products;
+        //     });
+        //   },
+        // );
       },
     );
 

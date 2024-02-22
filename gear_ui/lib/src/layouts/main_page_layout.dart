@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 // internal packages
 import 'package:gear_ui/src/layouts/sidebar.dart';
-import 'package:gear_ui/src/routes/app_router.dart';
+import 'package:gear_ui/src/routes/app_route.dart';
+import 'package:gear_ui/src/routes/app_routes.dart';
 
 class MainPageLayout extends StatelessWidget {
   const MainPageLayout({
@@ -12,7 +13,7 @@ class MainPageLayout extends StatelessWidget {
   });
 
   final Widget body;
-  final AppRoutes? selectedSideBarItem;
+  final AppRoute? selectedSideBarItem;
 
   // search input size
   static const double _searchInputHeight = 40;
@@ -29,10 +30,13 @@ class MainPageLayout extends StatelessWidget {
           child: TextField(
             readOnly: true,
             onTap: () {
-              AppRouter.redirectTo(
+              AppRoutes.search.asDestination(
                 context: context,
-                route: AppRoutes.search,
               );
+              // AppRouter.redirectTo(
+              //   context: context,
+              //   route: SearchPageRoute(),
+              // );
             },
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(

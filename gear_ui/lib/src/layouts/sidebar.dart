@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 // internal packages
-import 'package:gear_ui/src/common/widgets/image_widget.dart';
 import 'package:gear_ui/src/features/auth/domain/user.dart';
-import 'package:gear_ui/src/routes/app_router.dart';
+import 'package:gear_ui/src/routes/app_route.dart';
+import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
+import 'package:gear_ui/src/widgets/image_widget.dart';
 
 class SideBar extends StatelessWidget {
   const SideBar({
@@ -15,7 +16,7 @@ class SideBar extends StatelessWidget {
     this.user,
   });
 
-  final AppRoutes? selectedItem;
+  final AppRoute? selectedItem;
   final String headerImageName;
   final Color headerTextColor;
   final User? user;
@@ -37,26 +38,19 @@ class SideBar extends StatelessWidget {
   List<_SideBarItem> get _items {
     final items = <_SideBarItem>[
       _SideBarItem(
-        index: 0,
         name: AppRoutes.home.name,
         title: "Home",
         icon: const Icon(Icons.home),
         onTap: (context) {
-          AppRouter.redirectTo(
+          AppRoutes.home.asDestination(
             context: context,
-            route: AppRoutes.home,
           );
+          // AppRouter.redirectTo(
+          //   context: context,
+          //   route: HomePageRoute(),
+          // );
         },
       ),
-      // SideBarItem(
-      //   index: 1,
-      //   name: AppRoutes.signIn.name,
-      //   title: "Sign In",
-      //   icon: const Icon(Icons.login),
-      //   onTap: (context) {
-      //     context.pushNamed(AppRoutes.signIn.name);
-      //   },
-      // ),
     ];
 
     if (user?.employee ?? false) {
@@ -65,8 +59,14 @@ class SideBar extends StatelessWidget {
     return items;
   }
 
+  void _handleRedirectToSignIn(BuildContext context) {
+    AppRoutes.signIn.asDestination(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -87,10 +87,7 @@ class SideBar extends StatelessWidget {
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   if (user == null) {
-                    AppRouter.redirectTo(
-                      context: context,
-                      route: AppRoutes.signIn,
-                    );
+                    _handleRedirectToSignIn(context);
                   } else {
                     // TODO: send to user detail page.
                   }
@@ -147,10 +144,7 @@ class SideBar extends StatelessWidget {
                             : Center(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    AppRouter.redirectTo(
-                                      context: context,
-                                      route: AppRoutes.signIn,
-                                    );
+                                    _handleRedirectToSignIn(context);
                                   },
                                   child: const Text(
                                     "Sign In",
@@ -190,14 +184,12 @@ class SideBar extends StatelessWidget {
 
 class _SideBarItem {
   const _SideBarItem({
-    required this.index,
     required this.name,
     required this.title,
     required this.icon,
     required this.onTap,
   });
 
-  final int index;
   final String name;
   final String title;
   final Icon icon;
