@@ -18,51 +18,63 @@ class MainPageLayout extends StatelessWidget {
   // search input size
   static const double _searchInputHeight = 40;
 
+  void _redirectToCartPage(BuildContext context) {
+    AppRoutes.cart.asDestination(
+      context: context,
+    );
+  }
+
+  void _redirectToSearchPage(BuildContext context) {
+    AppRoutes.search.asDestination(
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    final Widget searchInput = SizedBox(
+      height: _searchInputHeight,
+      child: TextField(
+        readOnly: true,
+        onTap: () {
+          _redirectToSearchPage(context);
+        },
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(
+            left: 15.0,
+            top: 10.0,
+            bottom: 10.0,
+          ),
+          hintText: "Search",
+          suffixIcon: const Icon(Icons.search),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(_searchInputHeight / 2),
+          ),
+        ),
+      ),
+    );
+
+    final Widget cartButton = IconButton(
+      onPressed: () {
+        _redirectToCartPage(context);
+      },
+      icon: const Icon(
+        Icons.shopping_cart_outlined,
+      ),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: theme.colorScheme.inversePrimary,
         centerTitle: true,
-        title: SizedBox(
-          height: _searchInputHeight,
-          child: TextField(
-            readOnly: true,
-            onTap: () {
-              AppRoutes.search.asDestination(
-                context: context,
-              );
-              // AppRouter.redirectTo(
-              //   context: context,
-              //   route: SearchPageRoute(),
-              // );
-            },
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.only(
-                left: 15.0,
-                top: 10.0,
-                bottom: 10.0,
-              ),
-              hintText: "Search",
-              suffixIcon: const Icon(
-                Icons.search,
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(_searchInputHeight / 2),
-              ),
-            ),
-          ),
-        ),
+        title: searchInput,
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.shopping_cart_outlined,
-            ),
-          )
+          cartButton,
         ],
       ),
       drawer: SideBar(

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/products/presentation/home_product_list.dart';
+import 'package:gear_ui/src/features/products/presentation/home_page/home_page.dart';
 import 'package:gear_ui/src/routes/app_route.dart';
 
 class HomePageRoute extends AppRoute {
@@ -15,7 +15,7 @@ class HomePageRoute extends AppRoute {
 
   @override
   Widget builder(BuildContext context, GoRouterState state) {
-    return const HomeProductList();
+    return const HomePage();
   }
 
   @override

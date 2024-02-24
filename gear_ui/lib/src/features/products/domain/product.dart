@@ -32,6 +32,9 @@ class Product extends HiveObject {
   @HiveField(9, defaultValue: 0)
   int? quantity;
 
+  @HiveField(10, defaultValue: <String>[])
+  List<String>? images;
+
   Product({
     this.id,
     required this.categoryId,

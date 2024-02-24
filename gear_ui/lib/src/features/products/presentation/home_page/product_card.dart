@@ -75,19 +75,19 @@ class _HomeProductCardState extends State<HomeProductCard> {
     final Widget topItems = Align(
       alignment: Alignment.topCenter,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            child: Banner(
-              message: "-50%",
-              location: BannerLocation.topStart,
-              textStyle: TextStyle(
-                fontSize: theme.textTheme.labelMedium?.fontSize,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+          // SizedBox(
+          //   child: Banner(
+          //     message: "-50%",
+          //     location: BannerLocation.topStart,
+          //     textStyle: TextStyle(
+          //       fontSize: theme.textTheme.labelMedium?.fontSize,
+          //       fontWeight: FontWeight.bold,
+          //     ),
+          //   ),
+          // ),
           IconButton(
             onPressed: _handleTapToFavoriteButton,
             icon: Icon(
