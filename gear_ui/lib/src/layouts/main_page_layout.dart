@@ -6,25 +6,48 @@ import 'package:gear_ui/src/routes/app_route.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 
 class MainPageLayout extends StatelessWidget {
+  static const double _searchInputHeight = 40;
+
   const MainPageLayout({
     super.key,
     required this.body,
     this.selectedSideBarItem,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.floatingActionButtonAnimator,
+    this.persistentFooterButtons,
+    this.persistentFooterAlignment = AlignmentDirectional.centerEnd,
+    this.bottomSheet,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset = false,
+    this.primary = true,
+    this.extendBody = false,
+    this.extendBodyBehindAppBar = false,
+    this.restorationId,
   });
 
-  final Widget body;
   final AppRoute? selectedSideBarItem;
+  final Widget body;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
+  final List<Widget>? persistentFooterButtons;
+  final AlignmentDirectional persistentFooterAlignment;
+  final Widget? bottomSheet;
+  final Color? backgroundColor;
+  final bool resizeToAvoidBottomInset;
+  final bool primary;
+  final bool extendBody;
+  final bool extendBodyBehindAppBar;
+  final String? restorationId;
 
-  // search input size
-  static const double _searchInputHeight = 40;
-
-  void _redirectToCartPage(BuildContext context) {
+  void _handleClickToCartButton(BuildContext context) {
     AppRoutes.cart.asDestination(
       context: context,
     );
   }
 
-  void _redirectToSearchPage(BuildContext context) {
+  void _handleClickToSearchInput(BuildContext context) {
     AppRoutes.search.asDestination(
       context: context,
     );
@@ -39,7 +62,7 @@ class MainPageLayout extends StatelessWidget {
       child: TextField(
         readOnly: true,
         onTap: () {
-          _redirectToSearchPage(context);
+          _handleClickToSearchInput(context);
         },
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(
@@ -60,7 +83,7 @@ class MainPageLayout extends StatelessWidget {
 
     final Widget cartButton = IconButton(
       onPressed: () {
-        _redirectToCartPage(context);
+        _handleClickToCartButton(context);
       },
       icon: const Icon(
         Icons.shopping_cart_outlined,
@@ -68,11 +91,10 @@ class MainPageLayout extends StatelessWidget {
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: theme.colorScheme.inversePrimary,
-        centerTitle: true,
         title: searchInput,
+        centerTitle: true,
         actions: <Widget>[
           cartButton,
         ],
@@ -81,6 +103,18 @@ class MainPageLayout extends StatelessWidget {
         selectedItem: selectedSideBarItem,
       ),
       body: body,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      floatingActionButtonAnimator: floatingActionButtonAnimator,
+      persistentFooterButtons: persistentFooterButtons,
+      persistentFooterAlignment: persistentFooterAlignment,
+      bottomSheet: bottomSheet,
+      backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      primary: primary,
+      extendBody: extendBody,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
+      restorationId: restorationId,
     );
   }
 }

@@ -1,8 +1,9 @@
 // external packages
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 
 // internal packages
 import 'package:gear_ui/src/configurations/hive_config.dart';
+import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
 import 'package:gear_ui/src/features/products/domain/product.dart';
 
 class HiveBoxes {
@@ -23,7 +24,18 @@ class HiveBoxes {
     return await _getBox(productsBoxName);
   }
 
-  static Future<void> closeApp() async {
+  static Future<Box<CartProduct>> get cart async {
+    if (!Hive.isAdapterRegistered(cartProductTypeId)) {
+      Hive.registerAdapter(CartProductAdapter());
+    }
+    return await _getBox(cartBoxName);
+  }
+
+  static Future<void> startCache() async {
+    await Hive.initFlutter();
+  }
+
+  static Future<void> clearCache() async {
     if (await Hive.boxExists(productsBoxName)) {
       await Hive.deleteBoxFromDisk(productsBoxName);
     }

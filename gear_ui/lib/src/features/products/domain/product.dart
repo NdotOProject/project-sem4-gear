@@ -1,5 +1,6 @@
-import 'package:gear_ui/src/configurations/hive_config.dart';
 import 'package:hive/hive.dart';
+
+import 'package:gear_ui/src/configurations/hive_config.dart';
 
 part 'product.g.dart';
 

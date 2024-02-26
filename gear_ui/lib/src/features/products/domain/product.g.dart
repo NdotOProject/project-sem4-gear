@@ -8,7 +8,7 @@ part of 'product.dart';
 
 class ProductAdapter extends TypeAdapter<Product> {
   @override
-  final int typeId = productTypeId;
+  final int typeId = 1;
 
   @override
   Product read(BinaryReader reader) {
@@ -26,13 +26,13 @@ class ProductAdapter extends TypeAdapter<Product> {
       price: fields[7] as double,
       rating: fields[8] == null ? 0.0 : fields[8] as double?,
       quantity: fields[9] == null ? 0 : fields[9] as int?,
-    );
+    )..images = fields[10] == null ? [] : (fields[10] as List?)?.cast<String>();
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +50,9 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(8)
       ..write(obj.rating)
       ..writeByte(9)
-      ..write(obj.quantity);
+      ..write(obj.quantity)
+      ..writeByte(10)
+      ..write(obj.images);
   }
 
   @override

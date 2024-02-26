@@ -1,5 +1,9 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
+// external packages
+import 'package:carousel_slider/carousel_slider.dart';
+
+// internal packages
 import 'package:gear_ui/src/exceptions/not_found_page.dart';
 import 'package:gear_ui/src/features/products/data/product_repository.dart';
 import 'package:gear_ui/src/features/products/domain/product.dart';

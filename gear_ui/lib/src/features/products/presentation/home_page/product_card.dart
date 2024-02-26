@@ -28,13 +28,13 @@ class _HomeProductCardState extends State<HomeProductCard> {
 
   late bool _favorite;
 
-  void _handleTapToFavoriteButton() {
+  void _handleClickToFavoriteButton() {
     setState(() {
       _favorite = !_favorite;
     });
   }
 
-  void _handleTapToCard(BuildContext context) {
+  void _handleClickToCard(BuildContext context) {
     AppRoutes.productDetail.asDestination(
       context: context,
       productId: widget.product.id,
@@ -89,7 +89,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
           //   ),
           // ),
           IconButton(
-            onPressed: _handleTapToFavoriteButton,
+            onPressed: _handleClickToFavoriteButton,
             icon: Icon(
               _favorite ? Icons.favorite : Icons.favorite_border,
               color: Colors.red,
@@ -169,7 +169,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
 
     return InkWell(
       onTap: () {
-        _handleTapToCard(context);
+        _handleClickToCard(context);
       },
       child: SizedBox(
         height: _cardHeight,

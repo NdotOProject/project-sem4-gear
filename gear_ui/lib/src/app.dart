@@ -25,7 +25,7 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
-      HiveBoxes.closeApp();
+      HiveBoxes.clearCache();
     }
   }
 

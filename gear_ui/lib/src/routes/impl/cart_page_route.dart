@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gear_ui/src/features/cart/presentation/cart_page.dart';
+import 'package:gear_ui/src/features/cart/presentation/page.dart';
 import 'package:gear_ui/src/routes/app_route.dart';
 import 'package:go_router/go_router.dart';
 
