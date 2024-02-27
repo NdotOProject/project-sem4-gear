@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/products/data/product_repository.dart';
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/data/product_repository.dart';
+import 'package:gear_ui/src/features/product/domain/home_product.dart';
 import 'package:gear_ui/src/layouts/children_page_layout.dart';
 import 'package:gear_ui/src/utils/debounce.dart';
 
@@ -128,5 +128,5 @@ class _SearchPageState extends State<SearchPage> {
 class _SearchResult {
   _SearchResult();
 
-  List<Product> products = <Product>[];
+  List<HomeProduct> products = <HomeProduct>[];
 }

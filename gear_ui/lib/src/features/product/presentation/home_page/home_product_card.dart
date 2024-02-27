@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gear_ui/src/features/cart/data/cart_repository.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/domain/home_product.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
@@ -13,7 +14,7 @@ class HomeProductCard extends StatefulWidget {
     this.favorite = false,
   });
 
-  final Product product;
+  final HomeProduct product;
   final bool favorite;
 
   @override
@@ -27,14 +28,15 @@ class _HomeProductCardState extends State<HomeProductCard> {
   static const double _infoSectionPadding = 8.0;
 
   late bool _favorite;
+  final CartRepository _cartRepository = const CartRepository();
 
-  void _handleClickToFavoriteButton() {
+  void _handleTapToFavoriteButton() {
     setState(() {
       _favorite = !_favorite;
     });
   }
 
-  void _handleClickToCard(BuildContext context) {
+  void _handleTapToCard(BuildContext context) {
     AppRoutes.productDetail.asDestination(
       context: context,
       productId: widget.product.id,
@@ -44,6 +46,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
   void _handleAddToCart() {
     // TODO: implement add to cart logic.
     print("Clicked add to cart");
+    // _cartRepository.add();
   }
 
   @override
@@ -89,7 +92,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
           //   ),
           // ),
           IconButton(
-            onPressed: _handleClickToFavoriteButton,
+            onPressed: _handleTapToFavoriteButton,
             icon: Icon(
               _favorite ? Icons.favorite : Icons.favorite_border,
               color: Colors.red,
@@ -169,7 +172,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
 
     return InkWell(
       onTap: () {
-        _handleClickToCard(context);
+        _handleTapToCard(context);
       },
       child: SizedBox(
         height: _cardHeight,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // external packages
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/domain/home_product.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -10,46 +10,36 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class HomePageCarousel extends StatefulWidget {
   HomePageCarousel({
     super.key,
+    this.banners = const [],
     // this.products = const [],
   });
 
-  final List<Product> products = [
-    Product(
+  final List<String> banners;
+
+  final List<HomeProduct> products = [
+    HomeProduct(
+      id: 1,
       name: "Pr 01",
-      description: "hagsdkh kjasgdja sagdjkaj sgdk sajkask"
-          " jksadka jksakd khshdl s hksdjl "
-          "haskjhdkj ",
-      categoryId: 1,
-      brandId: 1,
-      code: '',
       price: 10,
     ),
-    Product(
+    HomeProduct(
+      id: 1,
       name: "Pr 02",
-      categoryId: 1,
-      brandId: 1,
-      code: '',
       price: 10,
     ),
-    Product(
+    HomeProduct(
+      id: 1,
       name: "Pr 03",
-      categoryId: 1,
-      brandId: 1,
-      code: '',
       price: 10,
     ),
-    Product(
+    HomeProduct(
+      id: 1,
       name: "Pr 04",
-      categoryId: 1,
-      brandId: 1,
-      code: '',
       price: 10,
     ),
-    Product(
+    HomeProduct(
+      id: 1,
       name: "Pr 05",
-      categoryId: 1,
-      brandId: 1,
-      code: '',
       price: 10,
     ),
   ];
@@ -139,51 +129,23 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
   Widget _cardBuilder(
     ThemeData theme,
     MediaQueryData mediaQuery,
-    Product product,
+    HomeProduct product,
   ) {
     return GestureDetector(
       child: SizedBox(
         width: mediaQuery.size.width,
         child: Card(
           clipBehavior: Clip.hardEdge,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Positioned.fill(
-                child: ImageWidget(
-                  imageUrl: null,
-                  fallbackImage: Image.asset(
-                    AssetsPath.fallbackImage(
-                      "no_image.png",
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+          child: ImageWidget(
+            imageUrl: null,
+            width: double.infinity,
+            height: double.infinity,
+            fallbackImage: Image.asset(
+              AssetsPath.fallbackImage(
+                "no_image.png",
               ),
-              // Positioned(
-              //   left: 20,
-              //   right: 20,
-              //   bottom: 0,
-              //   child: Column(
-              //     children: [
-              //       Text(
-              //         product.name,
-              //         maxLines: 1,
-              //         overflow: TextOverflow.ellipsis,
-              //         style: const TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           // fontSize:
-              //         ),
-              //       ),
-              //       Text(
-              //         product.description ?? "",
-              //         maxLines: 1,
-              //         overflow: TextOverflow.ellipsis,
-              //       ),
-              //     ],
-              //   ),
-              // ),
-            ],
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),

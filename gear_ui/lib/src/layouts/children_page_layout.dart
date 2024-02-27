@@ -6,6 +6,7 @@ class ChildrenPageLayout extends StatelessWidget {
   const ChildrenPageLayout({
     super.key,
     this.title,
+    this.actions,
     required this.body,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
@@ -22,6 +23,7 @@ class ChildrenPageLayout extends StatelessWidget {
   });
 
   final Widget? title;
+  final List<Widget>? actions;
   final Widget body;
   final Widget? floatingActionButton;
   final FloatingActionButtonLocation? floatingActionButtonLocation;
@@ -45,6 +47,7 @@ class ChildrenPageLayout extends StatelessWidget {
         iconTheme: const IconThemeData(
           size: _iconThemeSize,
         ),
+        actions: actions,
       ),
       body: body,
       floatingActionButton: floatingActionButton,

@@ -5,8 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 // internal packages
 import 'package:gear_ui/src/exceptions/not_found_page.dart';
-import 'package:gear_ui/src/features/products/data/product_repository.dart';
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/data/product_repository.dart';
+import 'package:gear_ui/src/features/product/domain/detail_product.dart';
 import 'package:gear_ui/src/layouts/children_page_layout.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
@@ -25,14 +25,14 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   static const _productRepository = ProductRepository();
-  Product? _product;
+  DetailProduct? _product;
 
   @override
   void initState() {
     super.initState();
     _productRepository.findById(widget.productId!).then((product) {
       setState(() {
-        _product = product;
+        // _product = product;
       });
     });
   }
@@ -143,7 +143,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           ),
                           Text(
                             "${_product!.price}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                             ),
                           )

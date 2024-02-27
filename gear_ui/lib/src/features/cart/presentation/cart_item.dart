@@ -11,9 +11,13 @@ class CartItem extends StatefulWidget {
   const CartItem({
     super.key,
     required this.product,
+    required this.onSelected,
+    this.selected = false,
   });
 
   final CartProduct product;
+  final bool selected;
+  final ValueChanged<bool?> onSelected;
 
   @override
   State<CartItem> createState() => _CartItemState();
@@ -28,6 +32,7 @@ class _CartItemState extends State<CartItem> {
   static const double _imageBorderRadius = 8;
 
   int _quantity = 0;
+  bool _selected = false;
 
   CartProduct get _product => widget.product;
 
@@ -51,6 +56,7 @@ class _CartItemState extends State<CartItem> {
     super.initState();
 
     _quantity = _product.quantity;
+    _selected = widget.selected;
   }
 
   @override
@@ -98,49 +104,67 @@ class _CartItemState extends State<CartItem> {
     return GestureDetector(
       onTap: _handleClickToCard,
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(_contentSectionPadding),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(_imageBorderRadius),
+        child: Stack(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(_contentSectionPadding),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(_imageBorderRadius),
+                      ),
+                      child: ImageWidget(
+                        height: _contentSectionHeight,
+                        width: double.infinity,
+                        imageUrl: _product.avatar,
+                        fallbackImage: fallbackImage,
+                      ),
+                    ),
                   ),
-                  child: ImageWidget(
-                    height: _contentSectionHeight,
-                    width: double.infinity,
-                    imageUrl: _product.avatar,
-                    fallbackImage: fallbackImage,
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      padding:
+                          const EdgeInsets.only(left: _gapBetweenLeftAndRight),
+                      height: _contentSectionHeight,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Expanded(
+                            child: productTitle,
+                          ),
+                          Expanded(
+                            child: productInfo,
+                          ),
+                          Expanded(
+                            child: priceAndQuantityControl,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  padding: const EdgeInsets.only(left: _gapBetweenLeftAndRight),
-                  height: _contentSectionHeight,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        child: productTitle,
-                      ),
-                      Expanded(
-                        child: productInfo,
-                      ),
-                      Expanded(
-                        child: priceAndQuantityControl,
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+            Positioned(
+              left: 0,
+              top: 0,
+              child: Checkbox(
+                onChanged: (checked) {
+                  setState(() {
+                    _selected = !_selected;
+                    widget.onSelected(_selected);
+                  });
+                },
+                value: _selected,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

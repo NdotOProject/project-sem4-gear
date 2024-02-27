@@ -1,93 +1,93 @@
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/domain/home_product.dart';
 import 'package:gear_ui/src/utils/hive_boxes.dart';
 import 'package:gear_ui/src/utils/pagination_param.dart';
 
 class ProductRepository {
   const ProductRepository();
 
-  Future<List<Product>> findAll({PaginationParam? param}) async {
+  Future<List<HomeProduct>> findAll({PaginationParam? param}) async {
     final products = await HiveBoxes.products;
 
-    final response = <Product>[
-      Product(
+    final response = <HomeProduct>[
+      HomeProduct(
         id: 1,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO01",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO01",
         name: "Adidas Predator 20.3",
         description: "abchk ahfjka ahdasl ashdjkashg akjshduakj dahdkja"
             " asjkhfkas  jk ashfksdk jsdhslg s  ghfdjkhgl sgfs ",
         price: 200,
       ),
-      Product(
+      HomeProduct(
         id: 2,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO02",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO02",
         name: "Nike Mercurial",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 3,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO03",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO03",
         name: "ABC",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 4,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO04",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO04",
         name: "DEF",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 5,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 05",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 6,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 06",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 7,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 07",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 8,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 08",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 9,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 09",
         price: 149,
       ),
-      Product(
+      HomeProduct(
         id: 10,
-        categoryId: 1,
-        brandId: 1,
-        code: "PRO05",
+        // categoryId: 1,
+        // brandId: 1,
+        // code: "PRO05",
         name: "GHI 10",
         price: 149,
       ),
@@ -115,21 +115,21 @@ class ProductRepository {
     }
   }
 
-  Future<Product?> findById(int id) async {
+  Future<HomeProduct?> findById(int id) async {
     final products = await HiveBoxes.products;
-    Product? product = products.get(id);
+    HomeProduct? product = products.get(id);
     if (product == null) {
       // TODO: call api -> replace for product
     }
     return product;
   }
 
-  Future<List<Product>> findByName(
+  Future<List<HomeProduct>> findByName(
     String name, {
     int maxResultCount = 5,
   }) async {
     final products = await HiveBoxes.products;
-    List<Product> result = products.values.where((product) {
+    List<HomeProduct> result = products.values.where((product) {
       return product.name.toLowerCase().contains(name.toLowerCase());
     }).toList();
 

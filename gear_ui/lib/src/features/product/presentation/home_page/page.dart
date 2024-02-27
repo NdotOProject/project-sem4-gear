@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/products/presentation/home_page/carousel.dart';
-import 'package:gear_ui/src/features/products/presentation/home_page/product_list.dart';
+import 'package:gear_ui/src/features/product/presentation/home_page/home_carousel.dart';
+import 'package:gear_ui/src/features/product/presentation/home_page/home_product_list.dart';
 import 'package:gear_ui/src/layouts/main_page_layout.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 
@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   static const Radius _carouselContainerRadius = Radius.elliptical(30, 20);
-  static const double _productListPadding = 20;
+  static const double _gapBetweenCarouselAndList = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +27,7 @@ class HomePage extends StatelessWidget {
       child: HomePageCarousel(),
     );
 
-    const Widget productList = Padding(
-      padding: EdgeInsets.only(top: _productListPadding),
-      child: HomePageProductList(),
-    );
+    const Widget productList = HomeProductList();
 
     return MainPageLayout(
       selectedSideBarItem: AppRoutes.home,
@@ -39,6 +36,9 @@ class HomePage extends StatelessWidget {
         child: ListView(
           children: <Widget>[
             carouselSection,
+            const SizedBox(
+              height: _gapBetweenCarouselAndList,
+            ),
             productList,
           ],
         ),

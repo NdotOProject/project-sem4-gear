@@ -1,10 +1,11 @@
 // external packages
+import 'package:gear_ui/src/local_storage/objects/cached_product.dart';
 import 'package:hive_flutter/adapters.dart';
 
 // internal packages
 import 'package:gear_ui/src/configurations/hive_config.dart';
 import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
-import 'package:gear_ui/src/features/products/domain/product.dart';
+import 'package:gear_ui/src/features/product/domain/home_product.dart';
 
 class HiveBoxes {
   static Future<Box<E>> _getBox<E>(String name) async {
@@ -17,19 +18,19 @@ class HiveBoxes {
     return await _getBox(settingsBoxName);
   }
 
-  static Future<Box<Product>> get products async {
+  static Future<Box<HomeProduct>> get products async {
     if (!Hive.isAdapterRegistered(productTypeId)) {
-      Hive.registerAdapter(ProductAdapter());
+      Hive.registerAdapter(CachedProductAdapter());
     }
     return await _getBox(productsBoxName);
   }
-
-  static Future<Box<CartProduct>> get cart async {
-    if (!Hive.isAdapterRegistered(cartProductTypeId)) {
-      Hive.registerAdapter(CartProductAdapter());
-    }
-    return await _getBox(cartBoxName);
-  }
+  //
+  // static Future<Box<CartProduct>> get cart async {
+  //   // if (!Hive.isAdapterRegistered(cartProductTypeId)) {
+  //   //   Hive.registerAdapter(CartProductAdapter());
+  //   // }
+  //   return await _getBox(cartBoxName);
+  // }
 
   static Future<void> startCache() async {
     await Hive.initFlutter();
