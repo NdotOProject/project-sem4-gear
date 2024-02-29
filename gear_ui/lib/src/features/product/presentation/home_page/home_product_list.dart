@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // internal packages
@@ -7,7 +8,7 @@ import 'package:gear_ui/src/features/product/presentation/home_page/home_product
 class HomeProductList extends StatefulWidget {
   const HomeProductList({
     super.key,
-    this.products = const <HomeProduct>[],
+    required this.products,
   });
 
   final List<HomeProduct> products;
@@ -17,10 +18,11 @@ class HomeProductList extends StatefulWidget {
 }
 
 class _HomeProductListState extends State<HomeProductList> {
-  static const int _maxItemPerRow = 2;
   static const double _contentSectionPadding = 5;
 
-  List<HomeProduct> get _products => widget.products;
+  int _maxItemPerRow = 2;
+
+  List<List<HomeProduct>> get _products => _transformData(widget.products);
 
   List<List<HomeProduct>> _transformData(List<HomeProduct> products) {
     int length = products.length;
@@ -42,8 +44,18 @@ class _HomeProductListState extends State<HomeProductList> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (kIsWeb) {
+      _maxItemPerRow = 4;
+    }
+  }
+
+  @override
   void dispose() {
     _products.clear();
+
     super.dispose();
   }
 
@@ -55,7 +67,7 @@ class _HomeProductListState extends State<HomeProductList> {
       ),
       child: Column(
         children: <Widget>[
-          ..._transformData(_products).map((productsPerRow) {
+          ..._products.map((productsPerRow) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

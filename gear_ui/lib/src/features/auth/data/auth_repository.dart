@@ -1,7 +1,7 @@
 import 'package:gear_ui/src/features/auth/domain/user.dart';
 
 class AuthRepository {
-  AuthRepository();
+  AuthRepository._();
 
   User? _user;
 

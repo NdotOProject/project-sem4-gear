@@ -1,11 +1,7 @@
-// external packages
 import 'package:flutter/material.dart';
-import 'package:gear_ui/src/features/product/domain/home_product.dart';
-import 'package:hive/hive.dart';
 
-// internal packages
-import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
-import 'package:gear_ui/src/features/product/domain/detail_product.dart';
+// external packages
+import 'package:hive/hive.dart';
 
 part 'cached_product.g.dart';
 
@@ -20,15 +16,14 @@ class CachedProduct extends HiveObject {
     required this.categoryId,
     required this.name,
     this.description,
-    this.avatar,
-    this.images,
-    required this.color,
-    this.size = 0,
     required this.price,
     this.rating = 0.0,
-    this.cartQuantity = 0,
-    this.currentQuantity = 0,
-    this.feedbacks = const [],
+    this.imageUrls,
+    this.avatarImageUrl,
+    this.sizeIds = const [],
+    this.colorIds = const [],
+    this.feedbackIds = const [],
+    this.quantity = 0,
   });
 
   // identifier fields
@@ -52,79 +47,50 @@ class CachedProduct extends HiveObject {
   String? description;
 
   @HiveField(6)
-  String? avatar;
-
-  @HiveField(7)
-  List<String>? images;
-
-  @HiveField(8)
-  int size;
-
-  @HiveField(9)
-  String color;
-
-  @HiveField(10)
   double price;
 
-  @HiveField(11)
-  int currentQuantity;
-
-  @HiveField(12)
-  int cartQuantity;
-
-  @HiveField(13)
+  @HiveField(7)
   double rating;
 
-  @HiveField(14)
-  List<int> feedbacks;
+  @HiveField(8)
+  List<String>? imageUrls;
 
-  static const Map<String, Color> _colors = <String, Color>{
-    "black": Colors.black,
-    "white": Colors.white,
-    "red": Colors.red,
-    "pink": Colors.pink,
-    "purple": Colors.purple,
-    "deepPurple": Colors.deepPurple,
-    "indigo": Colors.indigo,
-    "blue": Colors.blue,
-    "lightBlue": Colors.lightBlue,
-    "cyan": Colors.cyan,
-    "teal": Colors.teal,
-    "green": Colors.green,
-    "lightGreen": Colors.lightGreen,
-    "lime": Colors.lime,
-    "yellow": Colors.yellow,
-    "amber": Colors.amber,
-    "orange": Colors.orange,
-    "deepOrange": Colors.deepOrange,
-    "brown": Colors.brown,
-    "grey": Colors.grey,
-    "blueGrey": Colors.blueGrey,
+  @HiveField(9)
+  String? avatarImageUrl;
+
+  @HiveField(10)
+  List<int> sizeIds;
+
+  @HiveField(11)
+  List<int> colorIds;
+
+  @HiveField(12)
+  List<int> feedbackIds;
+
+  @HiveField(13)
+  int quantity;
+
+  static const Map<int, Color> colorData = <int, Color>{
+    1: Colors.black,
+    2: Colors.white,
+    3: Colors.red,
+    4: Colors.pink,
+    5: Colors.purple,
+    6: Colors.deepPurple,
+    7: Colors.indigo,
+    8: Colors.blue,
+    9: Colors.lightBlue,
+    10: Colors.cyan,
+    11: Colors.teal,
+    12: Colors.green,
+    13: Colors.lightGreen,
+    14: Colors.lime,
+    15: Colors.yellow,
+    16: Colors.amber,
+    17: Colors.orange,
+    18: Colors.deepOrange,
+    19: Colors.brown,
+    20: Colors.grey,
+    21: Colors.blueGrey,
   };
-
-  HomeProduct get homeProduct {
-    return HomeProduct(
-      id: id,
-      name: name,
-      price: price,
-    );
-  }
-
-  DetailProduct get detailProduct {
-    return DetailProduct(
-      name: name,
-      price: price,
-    );
-  }
-
-  CartProduct get cartProduct {
-    return CartProduct(
-      id: id,
-      name: name,
-      size: size,
-      color: _colors[color] ?? Colors.transparent,
-      price: price,
-      quantity: cartQuantity,
-    );
-  }
 }

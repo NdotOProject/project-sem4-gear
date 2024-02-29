@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gear_ui/src/features/cart/data/cart_repository.dart';
+import 'package:gear_ui/src/features/cart/presentation/page_controller.dart';
 
 // internal packages
 import 'package:gear_ui/src/features/product/domain/home_product.dart';
+import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
+import 'package:get/get.dart';
 
 class HomeProductCard extends StatefulWidget {
   const HomeProductCard({
@@ -27,8 +30,13 @@ class _HomeProductCardState extends State<HomeProductCard> {
   static const double _infoSectionHeight = 130.0;
   static const double _infoSectionPadding = 8.0;
 
+  final CartPageController _cartController = Get.find();
+
+  Future<CartRepository> get _cartRepository {
+    return CartRepository.instance();
+  }
+
   late bool _favorite;
-  final CartRepository _cartRepository = const CartRepository();
 
   void _handleTapToFavoriteButton() {
     setState(() {
@@ -44,9 +52,23 @@ class _HomeProductCardState extends State<HomeProductCard> {
   }
 
   void _handleAddToCart() {
-    // TODO: implement add to cart logic.
-    print("Clicked add to cart");
-    // _cartRepository.add();
+    _cartController.add(widget.product.id).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            "Added to cart",
+          ),
+          action: SnackBarAction(
+            label: 'See',
+            onPressed: () {
+              AppRoutes.cart.asDestination(
+                context: context,
+              );
+            },
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -60,16 +82,18 @@ class _HomeProductCardState extends State<HomeProductCard> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
+    final Image fallbackImage = Image.asset(
+      AssetsPath.fallbackImage(
+        "no_image.png",
+      ),
+      fit: BoxFit.cover,
+    );
+
     final Widget productImage = Positioned.fill(
       bottom: _infoSectionHeight,
       child: ImageWidget(
-        imageUrl: null,
-        fallbackImage: Image.asset(
-          AssetsPath.fallbackImage(
-            "no_image.png",
-          ),
-          fit: BoxFit.cover,
-        ),
+        imageUrl: widget.product.avatar,
+        fallbackImage: fallbackImage,
         width: _cardWidth,
         height: _cardHeight - _infoSectionHeight,
       ),

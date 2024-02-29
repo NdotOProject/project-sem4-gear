@@ -23,22 +23,21 @@ class CachedProductAdapter extends TypeAdapter<CachedProduct> {
       categoryId: fields[3] as int,
       name: fields[4] as String,
       description: fields[5] as String?,
-      avatar: fields[6] as String?,
-      images: (fields[7] as List?)?.cast<String>(),
-      color: fields[9] as String,
-      size: fields[8] as int,
-      price: fields[10] as double,
-      rating: fields[13] as double,
-      cartQuantity: fields[12] as int,
-      currentQuantity: fields[11] as int,
-      feedbacks: (fields[14] as List).cast<int>(),
+      price: fields[6] as double,
+      rating: fields[7] as double,
+      imageUrls: (fields[8] as List?)?.cast<String>(),
+      avatarImageUrl: fields[9] as String?,
+      sizeIds: (fields[10] as List).cast<int>(),
+      colorIds: (fields[11] as List).cast<int>(),
+      feedbackIds: (fields[12] as List).cast<int>(),
+      quantity: fields[13] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, CachedProduct obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -52,23 +51,21 @@ class CachedProductAdapter extends TypeAdapter<CachedProduct> {
       ..writeByte(5)
       ..write(obj.description)
       ..writeByte(6)
-      ..write(obj.avatar)
-      ..writeByte(7)
-      ..write(obj.images)
-      ..writeByte(8)
-      ..write(obj.size)
-      ..writeByte(9)
-      ..write(obj.color)
-      ..writeByte(10)
       ..write(obj.price)
-      ..writeByte(11)
-      ..write(obj.currentQuantity)
-      ..writeByte(12)
-      ..write(obj.cartQuantity)
-      ..writeByte(13)
+      ..writeByte(7)
       ..write(obj.rating)
-      ..writeByte(14)
-      ..write(obj.feedbacks);
+      ..writeByte(8)
+      ..write(obj.imageUrls)
+      ..writeByte(9)
+      ..write(obj.avatarImageUrl)
+      ..writeByte(10)
+      ..write(obj.sizeIds)
+      ..writeByte(11)
+      ..write(obj.colorIds)
+      ..writeByte(12)
+      ..write(obj.feedbackIds)
+      ..writeByte(13)
+      ..write(obj.quantity);
   }
 
   @override

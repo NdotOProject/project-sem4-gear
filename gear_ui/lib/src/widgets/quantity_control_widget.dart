@@ -8,6 +8,7 @@ class QuantityControlWidget extends StatefulWidget {
     required this.maximum,
     this.initial = 0,
     this.nullValue = 0,
+    this.onChanged,
     this.decrementIcon = const Icon(
       Icons.remove,
     ),
@@ -24,6 +25,7 @@ class QuantityControlWidget extends StatefulWidget {
   final int maximum;
   final int initial;
   final int nullValue;
+  final ValueChanged<int>? onChanged;
   final bool allowSigned;
   final bool allowDecimal;
   final bool enabledEditText;
@@ -64,6 +66,7 @@ class _QuantityControlWidgetState extends State<QuantityControlWidget> {
 
     setState(() {
       _textController.text = "$_quantity";
+      widget.onChanged?.call(_quantity);
     });
   }
 
@@ -82,6 +85,7 @@ class _QuantityControlWidgetState extends State<QuantityControlWidget> {
     _quantity = currentQuantity;
     setState(() {
       _textController.text = "$_quantity";
+      widget.onChanged?.call(_quantity);
     });
   }
 

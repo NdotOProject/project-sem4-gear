@@ -36,6 +36,11 @@ class AppRouter {
           name: AppRoutes.cart.name,
           builder: AppRoutes.cart.builder,
         ),
+        GoRoute(
+          path: AppRoutes.orderPreview.path,
+          name: AppRoutes.orderPreview.name,
+          builder: AppRoutes.orderPreview.builder,
+        ),
       ],
     );
   }

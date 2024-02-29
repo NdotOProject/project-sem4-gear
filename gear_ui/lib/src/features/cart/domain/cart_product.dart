@@ -1,25 +1,32 @@
-import 'dart:ui';
+// internal packages
+import 'package:gear_ui/src/local_storage/objects/cached_product.dart';
 
 class CartProduct {
+  int id;
+  String name;
+  String? avatar;
+
+  // int? sizeId;
+  // int? colorId;
+  int quantity;
+  double price;
+
   CartProduct({
     required this.id,
     required this.name,
-    required this.size,
-    required this.color,
+    // this.sizeId,
+    // this.colorId,
     required this.price,
     required this.quantity,
     this.avatar,
   });
 
-  int id;
-  String name;
-  String? avatar;
-  int size;
-  Color color;
-  int quantity;
-  double price;
-
-  double get totalAmount {
-    return quantity * price;
+  factory CartProduct.fromCachedProduct(CachedProduct cachedProduct) {
+    return CartProduct(
+      id: cachedProduct.id,
+      name: cachedProduct.name,
+      price: cachedProduct.price,
+      quantity: cachedProduct.quantity,
+    );
   }
 }

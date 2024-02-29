@@ -1,45 +1,66 @@
+// external packages
+import 'package:hive_flutter/adapters.dart';
+
+// internal packages
 import 'package:gear_ui/src/features/auth/domain/user.dart';
-import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
-import 'package:gear_ui/src/utils/hive_boxes.dart';
+import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
+import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
+import 'package:gear_ui/src/utils/pagination_param.dart';
 
-/*
-* add { signed in => post api, else => cache }
-* findAll { signed in => get api, else => read cached }
-*/
 class CartRepository {
-  final User? user;
+  final User? _user;
+  final Box<CachedCartItem> _cartBox;
 
-  const CartRepository({
-    this.user,
-  });
+  const CartRepository._(this._cartBox, this._user);
 
-  bool get isSignedIn => user != null;
+  static Future<CartRepository> instance({User? user}) async {
+    return CartRepository._(await CachedObjects.cart, user);
+  }
 
-  Future<List<CartProduct>> findAll() async {
-    if (isSignedIn) {
+  List<CachedCartItem> get _cached => [..._cartBox.values];
+
+  bool get _isSignedIn => _user != null;
+
+  Future<List<CachedCartItem>> findAll({PaginationParam? param}) async {
+    if (_isSignedIn) {
       // TODO: call api with user id. => cache
       return [];
     } else {
-      // TODO: check cached.
-      // final cartBox = await HiveBoxes.cart;
-      // return cartBox.values.toList();
-      return [];
+      // TODO: load from cached.
+      return _cached.toList();
     }
   }
 
-  Future<void> add(CartProduct product) async {
-    if (isSignedIn) {
+  Future<CachedCartItem?> findByProductId(int productId) async {
+    return _cached
+        .where(
+          (element) => element.productId == productId,
+        )
+        .take(1)
+        .singleOrNull;
+  }
+
+  Future<void> add(CachedCartItem item) async {
+    if (_isSignedIn) {
       // TODO: call api. => cache
     } else {
-      // final cartBox = await HiveBoxes.cart;
-      // cartBox.put(product.id, product);
+      final cachedItem = await findByProductId(item.productId);
+      if (cachedItem != null) {
+        cachedItem.quantity++;
+        cachedItem.save();
+      } else {
+        _cartBox.add(item);
+      }
     }
   }
 
-  Future<bool> contains(CartProduct product) async {
-    // final cartBox = await HiveBoxes.cart;
-    // final cachedItem = cartBox.get(product.id);
-    // return cachedItem == product;
-    return false;
+  Future<bool> contains(CachedCartItem item) async {
+    final cachedItem = await findByProductId(item.productId);
+
+    if (cachedItem == null) {
+      return false;
+    }
+
+    return cachedItem.quantity == item.quantity;
   }
 }
