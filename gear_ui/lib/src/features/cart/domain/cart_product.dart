@@ -5,23 +5,18 @@ class CartProduct {
   int id;
   String name;
   String? avatar;
-
-  // int? sizeId;
-  // int? colorId;
   int quantity;
   double price;
 
   CartProduct({
     required this.id,
     required this.name,
-    // this.sizeId,
-    // this.colorId,
     required this.price,
     required this.quantity,
     this.avatar,
   });
 
-  factory CartProduct.fromCachedProduct(CachedProduct cachedProduct) {
+  factory CartProduct.fromCached(CachedProduct cachedProduct) {
     return CartProduct(
       id: cachedProduct.id,
       name: cachedProduct.name,

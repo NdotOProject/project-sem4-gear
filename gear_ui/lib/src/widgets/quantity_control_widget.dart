@@ -19,6 +19,7 @@ class QuantityControlWidget extends StatefulWidget {
     this.allowDecimal = false,
     this.enabledEditText = true,
     this.disabledWhenLimited = true,
+    this.inputDecoration,
   });
 
   final int minimum;
@@ -32,6 +33,7 @@ class QuantityControlWidget extends StatefulWidget {
   final bool disabledWhenLimited;
   final Widget decrementIcon;
   final Widget incrementIcon;
+  final InputDecoration? inputDecoration;
 
   @override
   State<QuantityControlWidget> createState() => _QuantityControlWidgetState();
@@ -120,6 +122,7 @@ class _QuantityControlWidgetState extends State<QuantityControlWidget> {
         ),
         Expanded(
           child: TextField(
+            decoration: widget.inputDecoration,
             onChanged: _handleEditText,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly,

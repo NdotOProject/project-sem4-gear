@@ -14,6 +14,8 @@ class ProductSizeRepository {
     return ProductSizeRepository._(await CachedObjects.productSizes);
   }
 
+  Map<int, CachedProductSize> get _cached => {..._productSizeBox.toMap()};
+
   Future<List<CachedProductSize>> findAllByProductId(int productId) async {
     final data = <CachedProductSize>[
       CachedProductSize(
@@ -22,27 +24,27 @@ class ProductSizeRepository {
         productIds: <int>[1, 2, 3, 4, 5],
       ),
       CachedProductSize(
-        id: 1,
+        id: 2,
         name: "38",
         productIds: <int>[2, 3, 4, 5, 6],
       ),
       CachedProductSize(
-        id: 2,
+        id: 3,
         name: "39",
         productIds: <int>[3, 4, 5, 6, 7],
       ),
       CachedProductSize(
-        id: 3,
+        id: 4,
         name: "40",
         productIds: <int>[4, 5, 6, 7, 8],
       ),
       CachedProductSize(
-        id: 4,
+        id: 5,
         name: "41",
         productIds: <int>[5, 6, 7, 8, 9],
       ),
       CachedProductSize(
-        id: 5,
+        id: 6,
         name: "42",
         productIds: <int>[6, 7, 8, 9, 10],
       ),
@@ -51,19 +53,19 @@ class ProductSizeRepository {
     await _productSizeBox.putAll({for (var size in data) size.id: size});
 
     return [
-      ...data.where(
+      ..._cached.values.where(
         (productSize) => productSize.productIds.contains(productId),
-      )
+      ),
     ];
   }
 
   Future<CachedProductSize?> findById(int id) async {
-    CachedProductSize? productSize = _productSizeBox.get(id);
+    CachedProductSize? size = _cached[id];
 
-    if (productSize == null) {
+    if (size == null) {
       // TODO: call api
     }
 
-    return productSize;
+    return size;
   }
 }

@@ -14,104 +14,117 @@ class CartPage extends GetView<CartPageController> {
   static const double _contentPadding = 10;
   static const double _dividerIndent = 10;
   static const double _floatingButtonSize = 60;
+  static const double _floatingButtonPadding = 5;
+  static const double _selectedItemCountMessageSize = 25;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
+    final Widget floatingButton = Obx(
+      () => Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(_floatingButtonPadding),
+            child: SizedBox(
+              width: _floatingButtonSize,
+              height: _floatingButtonSize,
+              child: IconButton(
+                onPressed: () {
+                  controller.redirectToOrderReviewPage(context);
+                },
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  size: _floatingButtonSize / 2,
+                ),
+                color: theme.primaryIconTheme.color,
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.primaryColor,
+                ),
+                padding: EdgeInsets.zero,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              width: _selectedItemCountMessageSize,
+              height: _selectedItemCountMessageSize,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(
+                  _selectedItemCountMessageSize,
+                ),
+              ),
+              child: Text(
+                "${controller.selectedItems.length}",
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
     return Obx(
       () => ChildrenPageLayout(
         body: RefreshIndicator.adaptive(
           onRefresh: controller.fetchData,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(
-              horizontal: _contentPadding,
-            ),
-            itemCount: controller.cartItems.length + 1,
-            separatorBuilder: (BuildContext context, int index) {
-              return const Divider(
-                indent: _dividerIndent,
-                endIndent: _dividerIndent,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              if (index < controller.cartItems.length) {
-                return CartItem(
-                  item: controller.cartItems[index],
-                  onSelected: controller.selectItem,
-                );
-              } else {
-                return Container(
-                  height: 100,
-                  alignment: Alignment.center,
-                  child: const Text("No more"),
-                );
-              }
-            },
-          ),
+          child: controller.cartItems.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No items",
+                  ),
+                )
+              : ListView.separated(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: _contentPadding,
+                  ),
+                  itemCount: controller.cartItems.length + 1,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider(
+                      indent: _dividerIndent,
+                      endIndent: _dividerIndent,
+                    );
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index < controller.cartItems.length) {
+                      return CartItem(
+                        item: controller.cartItems[index],
+                        onSelected: controller.selectItem,
+                      );
+                    } else {
+                      return Container(
+                        height:
+                            _floatingButtonSize + (_floatingButtonPadding * 2),
+                        alignment: Alignment.center,
+                        child: const Text("No more"),
+                      );
+                    }
+                  },
+                ),
         ),
         actions: <Widget>[
           GestureDetector(
             onTap: () {
               controller.selectAllItems(!controller.isSelectAll);
             },
-            child: const Text(
-              "Select all",
+            child: Text(
+              controller.isSelectAll ? "Clear all" : "Select all",
             ),
           ),
-          Checkbox(
+          Checkbox.adaptive(
             value: controller.isSelectAll,
             onChanged: controller.selectAllItems,
           ),
         ],
-        floatingActionButton: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: SizedBox(
-                width: _floatingButtonSize,
-                height: _floatingButtonSize,
-                child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    controller.redirectToOrderReviewPage(context);
-                  },
-                  color: theme.primaryIconTheme.color,
-                  icon: const Icon(
-                    Icons.shopping_cart_outlined,
-                    size: _floatingButtonSize / 2,
-                  ),
-                  style: IconButton.styleFrom(
-                    backgroundColor: theme.primaryColor,
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                constraints: const BoxConstraints(
-                  minWidth: 25,
-                  minHeight: 25,
-                ),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  "${controller.selectedItems.length}",
-                  style: const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        floatingActionButton: floatingButton,
       ),
     );
   }

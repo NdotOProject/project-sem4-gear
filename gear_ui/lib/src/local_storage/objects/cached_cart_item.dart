@@ -15,6 +15,12 @@ class CachedCartItem extends HiveObject {
   @HiveField(2)
   bool selected;
 
+  @HiveField(3)
+  int? sizeId;
+
+  @HiveField(4)
+  int? colorId;
+
   CachedCartItem({
     required this.productId,
     this.quantity = 1,
@@ -23,6 +29,6 @@ class CachedCartItem extends HiveObject {
 
   @override
   String toString() {
-    return 'CachedCartItem{productId: $productId, quantity: $quantity, selected: $selected}';
+    return 'CachedCartItem{productId: $productId, quantity: $quantity, selected: $selected, sizeId: $sizeId, colorId: $colorId}';
   }
 }

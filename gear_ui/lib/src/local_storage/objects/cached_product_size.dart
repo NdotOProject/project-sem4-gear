@@ -24,4 +24,9 @@ class CachedProductSize extends HiveObject {
     this.description,
     required this.productIds,
   });
+
+  @override
+  String toString() {
+    return 'CachedProductSize{id: $id, name: $name, description: $description, productIds: $productIds}';
+  }
 }

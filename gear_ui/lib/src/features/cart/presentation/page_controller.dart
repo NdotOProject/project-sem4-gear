@@ -48,8 +48,8 @@ class CartPageController extends GetxController {
           ...selectedItems.map((cartItem) {
             return OrderPreviewItem(
               productId: cartItem.productId,
-              colorId: 0,
-              sizeId: 0,
+              colorId: cartItem.colorId ?? 0,
+              sizeId: cartItem.sizeId ?? 0,
               quantity: cartItem.quantity,
             );
           })
