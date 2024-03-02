@@ -96,6 +96,7 @@ class _CartItemState extends State<CartItem> {
   void _handleChangeQuantity(int value) {
     setState(() {
       _item.quantity = value;
+      _item.price = _item.quantity * (_product?.price ?? 1);
       _item.save();
     });
   }
@@ -122,7 +123,7 @@ class _CartItemState extends State<CartItem> {
     if (_item.sizeId != null) {
       selectedSize = await sizeRepository.findById(_item.sizeId!) ?? _errorSize;
     } else if (cachedSizes.isNotEmpty) {
-      selectedSize = _productSizes[0];
+      selectedSize = cachedSizes[0];
     }
 
     if (_item.colorId != null) {
@@ -143,6 +144,7 @@ class _CartItemState extends State<CartItem> {
 
       _handleSelectColor(selectedColor);
       _handleSelectSize(selectedSize);
+      _handleChangeQuantity(_quantity);
     });
   }
 

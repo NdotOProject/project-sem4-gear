@@ -21,6 +21,9 @@ class CachedCartItem extends HiveObject {
   @HiveField(4)
   int? colorId;
 
+  @HiveField(5)
+  double? price;
+
   CachedCartItem({
     required this.productId,
     this.quantity = 1,

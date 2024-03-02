@@ -51,6 +51,7 @@ class CartPageController extends GetxController {
               colorId: cartItem.colorId ?? 0,
               sizeId: cartItem.sizeId ?? 0,
               quantity: cartItem.quantity,
+              price: cartItem.price ?? 0,
             );
           })
         ],
