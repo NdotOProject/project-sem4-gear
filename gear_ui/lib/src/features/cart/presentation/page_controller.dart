@@ -1,66 +1,62 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 // external packages
 import 'package:get/get.dart';
 
 // internal packages
 import 'package:gear_ui/src/features/cart/data/cart_repository.dart';
-import 'package:gear_ui/src/features/order/domain/order_preview_item.dart';
 import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
-import 'package:gear_ui/src/routes/app_routes.dart';
 
 class CartPageController extends GetxController {
-  Future<CartRepository> get _cartRepository {
-    return CartRepository.instance();
+  final RxMap<int, CachedCartItem> _items = <int, CachedCartItem>{}.obs;
+  final RxMap<int, CachedCartItem> _selected = <int, CachedCartItem>{}.obs;
+
+  RxList<CachedCartItem> get allItems => [..._items.values].obs;
+
+  RxList<CachedCartItem> get selectedItems => [..._selected.values].obs;
+
+  bool get selectedAll {
+    return _items.isNotEmpty && mapEquals(_items, _selected);
   }
 
-  RxList<CachedCartItem> cartItems = <CachedCartItem>[].obs;
-
-  RxList<CachedCartItem> selectedItems = <CachedCartItem>[].obs;
-
-  bool get isSelectAll {
-    return cartItems.isNotEmpty && cartItems.length == selectedItems.length;
+  double get totalAmount {
+    return _selected.values.fold(0.0, (previousValue, element) {
+      return previousValue += (element.price ?? 0);
+    });
   }
 
-  void selectAllItems(bool? value) {
-    selectedItems.clear();
-    for (var item in cartItems) {
+  void handleItemQuantityChange(CachedCartItem item) {
+    if (item.selected) {
+      _selected[item.productId] = item;
+    }
+  }
+
+  void handleSelectAllItems(bool? value) {
+    for (var entry in _items.entries) {
+      var item = entry.value;
       item.selected = value ?? false;
       item.save();
-    }
 
-    selectedItems = [...cartItems.where((item) => item.selected)].obs;
+      if (item.selected) {
+        _selected[item.productId] = item;
+      } else {
+        _selected.remove(item.productId);
+      }
+    }
   }
 
-  void selectItem(CachedCartItem item) {
+  void handleSelectItem(CachedCartItem item) {
     if (item.selected) {
       selectedItems.add(item);
+      _selected[item.productId] = item;
     } else {
       selectedItems.remove(item);
+      _selected.remove(item.productId);
     }
   }
 
-  void redirectToOrderReviewPage(BuildContext context) {
-    if (selectedItems.isNotEmpty) {
-      AppRoutes.orderPreview.asDestination(
-        context: context,
-        orderItems: [
-          ...selectedItems.map((cartItem) {
-            return OrderPreviewItem(
-              productId: cartItem.productId,
-              colorId: cartItem.colorId ?? 0,
-              sizeId: cartItem.sizeId ?? 0,
-              quantity: cartItem.quantity,
-              price: cartItem.price ?? 0,
-            );
-          })
-        ],
-      );
-    }
-  }
-
-  Future<void> add(int productId) async {
-    final repository = await _cartRepository;
+  Future<void> addItem(int productId) async {
+    final repository = await CartRepository.instance();
     final item = CachedCartItem(
       productId: productId,
     );
@@ -69,9 +65,13 @@ class CartPageController extends GetxController {
   }
 
   Future<void> fetchData() async {
-    final repository = await _cartRepository;
-    cartItems = (await repository.findAll()).obs;
-    selectedItems = [...cartItems.where((item) => item.selected)].obs;
+    final repository = await CartRepository.instance();
+    for (var item in await repository.findAll()) {
+      _items[item.productId] = item;
+      if (item.selected) {
+        _selected[item.productId] = item;
+      }
+    }
   }
 
   @override

@@ -18,10 +18,12 @@ class CartItem extends StatefulWidget {
     super.key,
     required this.item,
     required this.onSelected,
+    required this.onQuantityChange,
   });
 
   final CachedCartItem item;
   final ValueChanged<CachedCartItem> onSelected;
+  final ValueChanged<CachedCartItem> onQuantityChange;
 
   @override
   State<CartItem> createState() => _CartItemState();
@@ -73,6 +75,7 @@ class _CartItemState extends State<CartItem> {
     setState(() {
       _item.selected = !_item.selected;
       _item.save();
+
       widget.onSelected(_item);
     });
   }
@@ -98,6 +101,8 @@ class _CartItemState extends State<CartItem> {
       _item.quantity = value;
       _item.price = _item.quantity * (_product?.price ?? 1);
       _item.save();
+
+      widget.onQuantityChange(_item);
     });
   }
 

@@ -52,7 +52,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
   }
 
   void _handleAddToCart() {
-    _cartController.add(widget.product.id).then((_) {
+    _cartController.addItem(widget.product.id).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gear_ui/src/routes/app_routes.dart';
 
 // external packages
 import 'package:get/get.dart';
@@ -17,58 +18,115 @@ class CartPage extends GetView<CartPageController> {
   static const double _floatingButtonPadding = 5;
   static const double _selectedItemCountMessageSize = 25;
 
+  static const double _bottomSheetHeight = 50;
+  static const double _bottomSheetBorderWidth = 0.5;
+
+  static const List<String> paymentMethods = ["Cash", "Paypal"];
+
+  void _handleBuy(BuildContext context) {
+    // if (user == null) {
+    AppRoutes.signIn.asDestination(context: context);
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    final Widget floatingButton = Obx(
-      () => Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(_floatingButtonPadding),
-            child: SizedBox(
-              width: _floatingButtonSize,
-              height: _floatingButtonSize,
-              child: IconButton(
-                onPressed: () {
-                  controller.redirectToOrderReviewPage(context);
-                },
-                icon: const Icon(
-                  Icons.shopping_cart_outlined,
-                  size: _floatingButtonSize / 2,
-                ),
-                color: theme.primaryIconTheme.color,
-                style: IconButton.styleFrom(
-                  backgroundColor: theme.primaryColor,
-                ),
-                padding: EdgeInsets.zero,
-              ),
+    const Widget emptyItemsWidget = Center(
+      child: Text(
+        "No items",
+      ),
+    );
+
+    final Widget allItemsControlWidget = Obx(
+      () => Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              controller.handleSelectAllItems(!controller.selectedAll);
+            },
+            child: Text(
+              controller.selectedAll ? "Clear all" : "Select all",
             ),
           ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              width: _selectedItemCountMessageSize,
-              height: _selectedItemCountMessageSize,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(
-                  _selectedItemCountMessageSize,
-                ),
-              ),
-              child: Text(
-                "${controller.selectedItems.length}",
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+          Checkbox.adaptive(
+            value: controller.selectedAll,
+            onChanged: controller.handleSelectAllItems,
           ),
         ],
+      ),
+    );
+
+    final Widget paymentMethodOptionsWidget = DropdownMenu(
+      initialSelection: paymentMethods[0],
+      inputDecorationTheme: InputDecorationTheme(
+        contentPadding: const EdgeInsets.only(left: 10),
+        border: InputBorder.none,
+        outlineBorder: BorderSide.none,
+        filled: true,
+        fillColor: theme.cardColor,
+      ),
+      menuStyle: const MenuStyle(
+        padding: MaterialStatePropertyAll(EdgeInsets.zero),
+      ),
+      expandedInsets: EdgeInsets.zero,
+      dropdownMenuEntries: [
+        ...paymentMethods.map((method) {
+          return DropdownMenuEntry(
+            value: method,
+            label: method,
+          );
+        }),
+      ],
+    );
+
+    final Widget bottomSheetWidget = Obx(
+      () => SizedBox(
+        height: _bottomSheetHeight + _bottomSheetBorderWidth,
+        child: Container(
+          padding: const EdgeInsets.only(top: _bottomSheetBorderWidth),
+          color: theme.shadowColor,
+          child: ColoredBox(
+            color: theme.cardColor,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: paymentMethodOptionsWidget,
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      "Total: ${controller.totalAmount}",
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    height: _bottomSheetHeight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        shape: const RoundedRectangleBorder(
+                          side: BorderSide.none,
+                        ),
+                        backgroundColor: theme.primaryColor,
+                        foregroundColor: theme.colorScheme.onPrimary,
+                      ),
+                      onPressed: () {
+                        _handleBuy(context);
+                      },
+                      child: const Text(
+                        "Buy",
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
 
@@ -76,69 +134,35 @@ class CartPage extends GetView<CartPageController> {
       () => ChildrenPageLayout(
         body: RefreshIndicator.adaptive(
           onRefresh: controller.fetchData,
-          child: controller.cartItems.isEmpty
-              ? const Center(
-                  child: Text(
-                    "No items",
-                  ),
-                )
+          child: controller.allItems.isEmpty
+              ? emptyItemsWidget
               : ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: _contentPadding,
-                  ),
-                  itemCount: controller.cartItems.length + 1,
+                  itemCount: controller.allItems.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CartItem(
+                      item: controller.allItems[index],
+                      onSelected: controller.handleSelectItem,
+                      onQuantityChange: controller.handleItemQuantityChange,
+                    );
+                  },
                   separatorBuilder: (BuildContext context, int index) {
                     return const Divider(
                       indent: _dividerIndent,
                       endIndent: _dividerIndent,
                     );
                   },
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index < controller.cartItems.length) {
-                      return CartItem(
-                        item: controller.cartItems[index],
-                        onSelected: controller.selectItem,
-                      );
-                    } else {
-                      return Container(
-                        height:
-                            _floatingButtonSize + (_floatingButtonPadding * 2),
-                        alignment: Alignment.center,
-                        child: const Text("No more"),
-                      );
-                    }
-                  },
+                  padding: const EdgeInsets.only(
+                    left: _contentPadding,
+                    right: _contentPadding,
+                    bottom: _bottomSheetHeight + _bottomSheetBorderWidth,
+                  ),
                 ),
         ),
         actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              controller.selectAllItems(!controller.isSelectAll);
-            },
-            child: Text(
-              controller.isSelectAll ? "Clear all" : "Select all",
-            ),
-          ),
-          Checkbox.adaptive(
-            value: controller.isSelectAll,
-            onChanged: controller.selectAllItems,
-          ),
+          allItemsControlWidget,
         ],
-        floatingActionButton: floatingButton,
+        bottomSheet: bottomSheetWidget,
       ),
     );
   }
 }
-
-/*
-Focus(
-    onKey: (node, event) {
-      if (_quantityTextController.text.length == 1 &&
-          event.isKeyPressed(LogicalKeyboardKey.backspace)) {
-        return KeyEventResult.handled;
-      }
-      return KeyEventResult.ignored;
-    },
-    child:
-),
-*/
