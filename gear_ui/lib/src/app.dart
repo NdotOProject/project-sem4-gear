@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gear_ui/src/features/product/presentation/home_page/page.dart';
 import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
 import 'package:gear_ui/src/routes/app_router.dart';
 
@@ -9,24 +10,24 @@ class Application extends StatefulWidget {
   State<Application> createState() => _ApplicationState();
 }
 
-class _ApplicationState extends State<Application> with WidgetsBindingObserver {
+class _ApplicationState extends State<Application> {
+  late final AppLifecycleListener _listener;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+
+    _listener = AppLifecycleListener(
+      onPause: () {
+        CachedObjects.clearCache();
+      },
+    );
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    _listener.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
-      CachedObjects.clearCache();
-    }
   }
 
   @override

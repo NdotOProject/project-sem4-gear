@@ -15,7 +15,7 @@ class HomePageRoute extends AppRoute {
 
   @override
   Widget builder(BuildContext context, GoRouterState state) {
-    return const HomePage();
+    return HomePage();
   }
 
   @override

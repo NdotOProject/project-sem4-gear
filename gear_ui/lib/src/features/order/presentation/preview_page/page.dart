@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gear_ui/src/features/auth/domain/user.dart';
+import 'package:gear_ui/src/features/auth/domain/signed_in_user.dart';
 import 'package:gear_ui/src/features/order/domain/order_preview_item.dart';
 import 'package:gear_ui/src/layouts/children_page_layout.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
@@ -13,7 +13,7 @@ class OrderPreviewPage extends StatelessWidget {
 
   final List<OrderPreviewItem> items;
   final List<String> paymentMethods = ["Cash", "Paypal"];
-  final User? user;
+  final SignedInUser? user;
 
   static const double _bottomSheetHeight = 50;
   static const double _bottomSheetBorderWidth = 0.5;

@@ -15,18 +15,18 @@ class HomeProduct {
     this.avatar,
   });
 
-  factory HomeProduct.fromCachedProduct(CachedProduct cachedProduct) {
+  factory HomeProduct.fromCached(CachedProduct cached) {
     return HomeProduct(
-      id: cachedProduct.id,
-      name: cachedProduct.name,
-      description: cachedProduct.description,
-      price: cachedProduct.price,
-      avatar: cachedProduct.avatarImageUrl,
+      id: cached.id,
+      name: cached.name,
+      description: cached.description,
+      price: cached.price,
+      avatar: cached.avatarImageUrl,
     );
   }
 
-  static List<HomeProduct> fromIterableCachedProducts(
+  static List<HomeProduct> fromCachedIterable(
       Iterable<CachedProduct> iterable) {
-    return [...iterable.map(HomeProduct.fromCachedProduct)];
+    return [...iterable.map(HomeProduct.fromCached)];
   }
 }

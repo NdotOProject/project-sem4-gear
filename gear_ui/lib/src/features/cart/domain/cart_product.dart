@@ -16,12 +16,12 @@ class CartProduct {
     this.avatar,
   });
 
-  factory CartProduct.fromCached(CachedProduct cachedProduct) {
+  factory CartProduct.fromCached(CachedProduct cached) {
     return CartProduct(
-      id: cachedProduct.id,
-      name: cachedProduct.name,
-      price: cachedProduct.price,
-      quantity: cachedProduct.quantity,
+      id: cached.id,
+      name: cached.name,
+      price: cached.price,
+      quantity: cached.quantity,
     );
   }
 }

@@ -2,18 +2,18 @@
 import 'package:hive_flutter/adapters.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/auth/domain/user.dart';
+import 'package:gear_ui/src/features/auth/domain/signed_in_user.dart';
 import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
 import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
 import 'package:gear_ui/src/utils/pagination_param.dart';
 
 class CartRepository {
-  final User? _user;
+  final SignedInUser? _user;
   final Box<CachedCartItem> _cartBox;
 
   const CartRepository._(this._cartBox, this._user);
 
-  static Future<CartRepository> instance({User? user}) async {
+  static Future<CartRepository> instance({SignedInUser? user}) async {
     return CartRepository._(await CachedObjects.cart, user);
   }
 

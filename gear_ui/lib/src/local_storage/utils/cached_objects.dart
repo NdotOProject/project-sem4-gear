@@ -1,7 +1,9 @@
 // external packages
+import 'package:gear_ui/src/features/product/data/product_repository.dart';
 import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
 import 'package:gear_ui/src/local_storage/objects/cached_product_color.dart';
 import 'package:gear_ui/src/local_storage/objects/cached_product_size.dart';
+import 'package:gear_ui/src/local_storage/objects/cached_user.dart';
 import 'package:hive_flutter/adapters.dart';
 
 // internal packages
@@ -15,9 +17,16 @@ class CachedObjects {
   static const String productsBoxName = "products";
   static const String productColorsBoxName = "productColors";
   static const String productSizesBoxName = "productSizes";
+  static const String userBoxName = "user";
 
   static Future<void> startCache() async {
     await Hive.initFlutter();
+  }
+
+  static void reCache() async {
+    final repository = await ProductRepository.instance;
+
+    repository.findAll();
   }
 
   static Future<void> clearCache() async {
@@ -58,5 +67,12 @@ class CachedObjects {
       Hive.registerAdapter(CachedProductSizeAdapter());
     }
     return await _getBox(productSizesBoxName);
+  }
+
+  static Future<Box<CachedUser>> get user async {
+    if (!Hive.isAdapterRegistered(CachedUser.typeId)) {
+      Hive.registerAdapter(CachedUserAdapter());
+    }
+    return await _getBox(userBoxName);
   }
 }

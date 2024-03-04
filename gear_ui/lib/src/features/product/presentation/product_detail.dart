@@ -33,7 +33,7 @@ class _ProductDetailState extends State<ProductDetail> {
         .then((repository) {
           return repository.findById(widget.productId!);
         })
-        .then(DetailProduct.fromCachedProduct)
+        .then(DetailProduct.fromCached)
         .then((detailProduct) {
           setState(() {
             _product = detailProduct;

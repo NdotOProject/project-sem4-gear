@@ -11,7 +11,7 @@ import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/pagination_param.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,11 +23,8 @@ class _HomePageState extends State<HomePage> {
 
   static const int _pageSize = 4;
 
-  Future<ProductRepository> get _productRepository {
-    return ProductRepository.instance;
-  }
-
   final ScrollController _scrollController = ScrollController();
+  late final AppLifecycleListener _listener;
 
   final List<HomeProduct> _products = [];
   int _pageNumber = 1;
@@ -51,36 +48,29 @@ class _HomePageState extends State<HomePage> {
     }
     _loading = true;
 
-    _productRepository
-        .then((repository) {
-          return repository.findAll(
-            param: PaginationParam(
-              page: _pageNumber,
-              size: _pageSize,
-            ),
-          );
-        })
-        .then(HomeProduct.fromIterableCachedProducts)
-        .then((homeProducts) {
-          if (mounted) {
-            setState(() {
-              _loading = false;
+    final repository = await ProductRepository.instance;
+    final cachedProducts = await repository.findAll(
+      param: PaginationParam(
+        page: _pageNumber,
+        size: _pageSize,
+      ),
+    );
 
-              _pageNumber++;
+    if (mounted) {
+      final homeProducts =
+          HomeProduct.fromCachedIterable(cachedProducts);
+      setState(() {
+        _loading = false;
 
-              if (homeProducts.length < _pageSize) {
-                _hasMore = false;
-              }
+        _pageNumber++;
 
-              _products.addAll(homeProducts);
-            });
-          }
-        })
-        .catchError((err, stackTrace) {
-          if (kDebugMode) {
-            print(err);
-          }
-        });
+        if (homeProducts.length < _pageSize) {
+          _hasMore = false;
+        }
+
+        _products.addAll(homeProducts);
+      });
+    }
   }
 
   @override
@@ -95,11 +85,19 @@ class _HomePageState extends State<HomePage> {
         _fetchData();
       }
     });
+
+    _listener = AppLifecycleListener(
+      onResume: () {
+        print("fetch");
+        _fetchData();
+      },
+    );
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _listener.dispose();
 
     super.dispose();
   }

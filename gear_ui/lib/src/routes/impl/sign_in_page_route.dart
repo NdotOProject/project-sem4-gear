@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/auth/presentation/sign_in.dart';
+import 'package:gear_ui/src/features/auth/presentation/sign_in/page.dart';
 import 'package:gear_ui/src/routes/app_route.dart';
 
 class SignInPageRoute extends AppRoute {

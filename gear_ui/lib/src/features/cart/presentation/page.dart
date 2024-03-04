@@ -14,9 +14,9 @@ class CartPage extends GetView<CartPageController> {
 
   static const double _contentPadding = 10;
   static const double _dividerIndent = 10;
-  static const double _floatingButtonSize = 60;
-  static const double _floatingButtonPadding = 5;
-  static const double _selectedItemCountMessageSize = 25;
+  // static const double _floatingButtonSize = 60;
+  // static const double _floatingButtonPadding = 5;
+  // static const double _selectedItemCountMessageSize = 25;
 
   static const double _bottomSheetHeight = 50;
   static const double _bottomSheetBorderWidth = 0.5;

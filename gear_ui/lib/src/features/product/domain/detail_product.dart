@@ -11,11 +11,11 @@ class DetailProduct {
     this.images,
   });
 
-  static DetailProduct? fromCachedProduct(CachedProduct? cachedProduct) {
-    if (cachedProduct != null) {
+  static DetailProduct? fromCached(CachedProduct? cached) {
+    if (cached != null) {
       return DetailProduct(
-        name: cachedProduct.name,
-        price: cachedProduct.price,
+        name: cached.name,
+        price: cached.price,
       );
     }
     return null;

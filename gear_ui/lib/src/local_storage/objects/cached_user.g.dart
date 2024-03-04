@@ -1,47 +1,50 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cached_cart_item.dart';
+part of 'cached_user.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CachedCartItemAdapter extends TypeAdapter<CachedCartItem> {
+class CachedUserAdapter extends TypeAdapter<CachedUser> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
-  CachedCartItem read(BinaryReader reader) {
+  CachedUser read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CachedCartItem(
-      productId: fields[0] as int,
-      quantity: fields[1] as int,
-      selected: fields[2] as bool,
-    )
-      ..sizeId = fields[3] as int?
-      ..colorId = fields[4] as int?
-      ..price = fields[5] as double?;
+    return CachedUser(
+      id: fields[0] as int?,
+      name: fields[1] as String?,
+      email: fields[2] as String,
+      password: fields[3] as String,
+      avatar: fields[4] as String?,
+      employee: fields[5] as bool,
+      remember: fields[6] as bool,
+    );
   }
 
   @override
-  void write(BinaryWriter writer, CachedCartItem obj) {
+  void write(BinaryWriter writer, CachedUser obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
-      ..write(obj.productId)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.quantity)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.selected)
+      ..write(obj.email)
       ..writeByte(3)
-      ..write(obj.sizeId)
+      ..write(obj.password)
       ..writeByte(4)
-      ..write(obj.colorId)
+      ..write(obj.avatar)
       ..writeByte(5)
-      ..write(obj.price);
+      ..write(obj.employee)
+      ..writeByte(6)
+      ..write(obj.remember);
   }
 
   @override
@@ -50,7 +53,7 @@ class CachedCartItemAdapter extends TypeAdapter<CachedCartItem> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CachedCartItemAdapter &&
+      other is CachedUserAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
