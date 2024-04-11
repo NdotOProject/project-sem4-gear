@@ -1,5 +1,7 @@
 {
-  "baseUrl": "localhost:8080/api",
+  "baseUrl": "https://dummyjson.com/",
   "endpoints": {
+    "products": "/products",
+    "productDetail": "/products/:id"
   }
 }

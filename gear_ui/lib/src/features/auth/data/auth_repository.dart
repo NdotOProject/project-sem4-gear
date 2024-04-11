@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_result.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_user.dart';
 import 'package:gear_ui/src/features/auth/domain/signed_in_user.dart';
@@ -31,18 +32,64 @@ class AuthRepository {
 
   Future<SignInResult> signIn(SignInUser user) async {
     // TODO: call api.
-    final response = CachedUser(
-      id: 1,
-      name: "Test",
-      // email: "test@gmail.com",
-      // password: "123456",
-      avatar: null,
-      employee: false,
-    );
-    response.remember = user.remember;
-    response.email = user.remember ? user.email : "";
-    response.password = user.remember ? user.password : "";
+    /*
+      {
+        "success": true | false,
+        "data": {
+          "id": 1,
+          "name": "Test",
+          "avatar": null | string,
+          "employee": true | false
+        },
+        "errors": {
+          "email": [
+            "abc",
+            "xyz"
+          ],
+          "password": [
+            "def",
+            "ghi"
+          ]
+        }
+      }
+     */
 
-    return SignInResult();
+    bool validate() {
+      return user.email == "test@gmail.com" && user.password == "Test123";
+    }
+
+    final result = SignInResult.fromResponse(
+      Response<String>(
+        requestOptions: RequestOptions(),
+        extra: <String, dynamic>{
+          "success": validate(),
+          if (!validate())
+            "errors": {
+              "email": ["Incorrect email."],
+              "password": ["Incorrect password."],
+            }
+        },
+        data: validate()
+            ? """{
+                "id": 1,
+                "name": "Test",
+                "avatar": null,
+                "employee": false
+              }"""
+            : null,
+      ),
+    );
+
+    final resultUser = result.user;
+
+    resultUser?.remember = user.remember;
+    resultUser?.email = user.remember ? user.email : "";
+    resultUser?.password = user.remember ? user.password : "";
+
+    if (resultUser != null && resultUser.remember) {
+      _userBox.put(_key, resultUser);
+    }
+
+    return result;
   }
 }

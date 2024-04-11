@@ -90,6 +90,11 @@ class PasswordFormField extends FormField<String> {
             final _PasswordFormFieldState state =
                 field as _PasswordFormFieldState;
 
+            void handleChanged(String value) {
+              field.didChange(value);
+              onChanged?.call(value);
+            }
+
             return TextFormField(
               controller: controller,
               initialValue: initialValue,
@@ -175,7 +180,7 @@ class PasswordFormField extends FormField<String> {
               minLines: minLines,
               expands: expands,
               maxLength: maxLength,
-              onChanged: onChanged,
+              onChanged: handleChanged,
               onTap: onTap,
               onTapOutside: onTapOutside,
               onEditingComplete: onEditingComplete,

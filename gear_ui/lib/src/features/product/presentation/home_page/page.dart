@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // internal packages
@@ -11,7 +10,7 @@ import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/pagination_param.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -57,8 +56,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (mounted) {
-      final homeProducts =
-          HomeProduct.fromCachedIterable(cachedProducts);
+      final homeProducts = HomeProduct.fromCachedIterable(cachedProducts);
       setState(() {
         _loading = false;
 
@@ -88,7 +86,6 @@ class _HomePageState extends State<HomePage> {
 
     _listener = AppLifecycleListener(
       onResume: () {
-        print("fetch");
         _fetchData();
       },
     );

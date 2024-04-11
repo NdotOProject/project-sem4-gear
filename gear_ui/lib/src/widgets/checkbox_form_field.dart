@@ -1,33 +1,27 @@
 import 'package:flutter/material.dart';
 
 class CheckboxFormField extends FormField<bool> {
-  static const double checkboxSize = 30;
+  static const double _checkboxSize = 30;
 
   CheckboxFormField({
     super.key,
-    bool checked = false,
+    super.onSaved,
+    super.validator,
+    super.autovalidateMode,
+    super.restorationId,
+    super.initialValue,
     required ValueChanged<bool?>? onChanged,
-    // MouseCursor? mouseCursor,
-    // Color? activeColor,
-    // MaterialStateProperty<Color?>? fillColor,
     Text? title,
     Widget? otherElement,
     bool reversePosition = false,
     bool tristate = false,
     bool? enabled,
-    FormFieldSetter<bool>? onSaved,
-    FormFieldValidator<bool>? validator,
-    AutovalidateMode? autovalidateMode,
   }) : super(
-          initialValue: checked,
           enabled: enabled ?? true,
-          onSaved: onSaved,
-          validator: validator,
-          autovalidateMode: autovalidateMode,
           builder: (FormFieldState<bool> state) {
             final Widget checkboxElement = SizedBox(
-              width: checkboxSize,
-              height: checkboxSize,
+              width: _checkboxSize,
+              height: _checkboxSize,
               child: Checkbox.adaptive(
                 value: state.value,
                 isError: state.hasError,

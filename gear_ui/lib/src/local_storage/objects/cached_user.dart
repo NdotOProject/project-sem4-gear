@@ -36,4 +36,19 @@ class CachedUser extends HiveObject {
     this.employee = false,
     this.remember = false,
   });
+
+  // json from api
+  factory CachedUser.fromJson(Map<String, dynamic> json) {
+    return CachedUser(
+      id: json["id"] as int?,
+      name: json["name"] as String?,
+      avatar: json["avatar"] as String?,
+      employee: json["employee"] as bool,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'CachedUser{id: $id, name: $name, email: $email, password: $password, avatar: $avatar, employee: $employee, remember: $remember}';
+  }
 }

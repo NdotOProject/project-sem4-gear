@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gear_ui/src/features/auth/data/auth_repository.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_result.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_user.dart';
+import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/nested_list_transformer.dart';
 import 'package:gear_ui/src/widgets/checkbox_form_field.dart';
 import 'package:gear_ui/src/widgets/form_widget.dart';
@@ -60,35 +61,20 @@ class _SignInState extends State<SignIn> {
   bool _remember = false;
 
   // other data holders
-  SignInResult _signInResult = SignInResult();
   List<List<_SocialMedia>> _transformedSocialMediaWays = [];
+  SignInResult _signInResult = SignInResult();
 
-  // event handlers
-  void _handleTapToRemember(bool? value) {
-    setState(() {
-      _remember = value ?? false;
-    });
-  }
+  String? get _extraEmailError =>
+      (_signInResult.emailErrors?.isNotEmpty ?? false)
+          ? (_signInResult.emailErrors?[0])
+          : null;
 
-  void _redirectToPrivacyPage() {
-    // TODO: implement logic.
-  }
+  String? get _extraPasswordError =>
+      (_signInResult.passwordErrors?.isNotEmpty ?? false)
+          ? (_signInResult.passwordErrors?[0])
+          : null;
 
-  void _handleTapToForgotPassword() {}
-
-  void _handleTapToCreateNewAccount() {}
-
-  void _handleSignIn() async {
-    final repository = await AuthRepository.instance;
-    _signInResult = await repository.signIn(
-      SignInUser(
-        email: _emailInputController.text,
-        password: _passwordInputController.text,
-        remember: _remember,
-      ),
-    );
-  }
-
+  // form validators
   String? _emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Email is required.";
@@ -112,6 +98,31 @@ class _SignInState extends State<SignIn> {
     }
     return null;
   }
+
+  // event handlers
+  void _rememberChangeHandler(bool? value) {
+    setState(() {
+      _remember = value ?? false;
+    });
+  }
+
+  Future<SignInResult> _signInHandler(BuildContext context) async {
+    final repository = await AuthRepository.instance;
+    return await repository.signIn(
+      SignInUser(
+        email: _emailInputController.text,
+        password: _passwordInputController.text,
+        remember: _remember,
+      ),
+    );
+  }
+
+  // navigators
+  void _handleTapToForgotPassword() {}
+
+  void _handleTapToCreateNewAccount() {}
+
+  void _redirectToPrivacyPage() {}
 
   @override
   void initState() {
@@ -148,46 +159,67 @@ class _SignInState extends State<SignIn> {
         theme.textTheme.titleMedium?.fontSize ?? 20;
 
     final Widget form = FormWidget(
-      title: SizedBox(
-        height: _logoSize,
-        child: Column(
-          children: [
-            FlutterLogo(
-              size: _logoSize - (formTitleFontSize * 2),
-            ),
-            Text(
-              "Gear",
-              style: TextStyle(
-                fontSize: formTitleFontSize,
+      onSubmit: (isValid) {
+        if (isValid) {
+          _signInHandler(context).then((result) {
+            if (result.success) {
+              AppRoutes.home.asDestination(context: context);
+            } else {
+              setState(() {
+                _signInResult = result;
+              });
+            }
+          });
+        }
+      },
+      title: Align(
+        alignment: Alignment.center,
+        child: SizedBox(
+          height: _logoSize,
+          child: Column(
+            children: [
+              FlutterLogo(
+                size: _logoSize - (formTitleFontSize * 2),
               ),
-            ),
-          ],
+              Text(
+                "Gear",
+                style: TextStyle(
+                  fontSize: formTitleFontSize,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       fields: [
         TextFormField(
           controller: _emailInputController,
           validator: _emailValidator,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: "Email",
+            errorText: _extraEmailError,
           ),
         ),
         PasswordFormField(
           controller: _passwordInputController,
           validator: _passwordValidator,
+          decoration: InputDecoration(
+            errorText: _extraPasswordError,
+          ),
         ),
         CheckboxFormField(
-          onChanged: _handleTapToRemember,
+          initialValue: _remember,
+          onChanged: _rememberChangeHandler,
           title: const Text("Remember me"),
         ),
       ],
-      submitButtonSize: _buttonSize,
-      submitButton: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: buttonShape,
-          backgroundColor: theme.primaryColor,
+      submitButton: Container(
+        height: _buttonSize.height,
+        decoration: BoxDecoration(
+          color: theme.primaryColor,
+          borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: _handleSignIn,
+        alignment: Alignment.center,
         child: Text(
           "Sign In",
           style: TextStyle(
