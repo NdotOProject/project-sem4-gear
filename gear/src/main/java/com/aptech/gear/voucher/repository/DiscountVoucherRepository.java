@@ -1,4 +1,4 @@
-package com.aptech.gear.voucher.data;
+package com.aptech.gear.voucher.repository;
 
 import com.aptech.gear.voucher.domain.DiscountVoucher;
 import org.springframework.data.jpa.repository.JpaRepository;

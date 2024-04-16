@@ -1,6 +1,7 @@
-package com.aptech.gear.product.data;
+package com.aptech.gear.product.service;
 
 import com.aptech.gear.product.domain.Product;
+import com.aptech.gear.product.repository.ProductRepository;
 import com.aptech.gear.util.PaginatedList;
 import com.aptech.gear.util.PaginationMetadata;
 import com.aptech.gear.util.PaginationParameter;

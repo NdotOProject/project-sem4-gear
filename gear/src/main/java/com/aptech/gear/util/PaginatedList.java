@@ -1,6 +1,7 @@
 package com.aptech.gear.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
@@ -14,7 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Getter
-@JsonIgnoreType
+@JsonSerialize(using = PaginatedListSerializer.class)
 public class PaginatedList<T> {
 
 	private final List<T> items;
@@ -87,7 +88,7 @@ public class PaginatedList<T> {
 		return get(size() - 1);
 	}
 
-	public Map<String, Object> toJson() {
+	Map<String, Object> toJson() {
 		// metadata
 		Map<String, Number> map = new HashMap<>();
 

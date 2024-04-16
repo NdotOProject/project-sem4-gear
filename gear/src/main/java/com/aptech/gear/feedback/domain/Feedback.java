@@ -37,7 +37,7 @@ public class Feedback {
 
 	private String content;
 
-	private Integer rating;
+	private Double rating;
 
 	private Boolean updated;
 }

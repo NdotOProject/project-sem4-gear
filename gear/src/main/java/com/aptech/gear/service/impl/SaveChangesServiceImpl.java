@@ -8,10 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class SaveChangesServiceImpl<E, ID> implements SaveChangesService<E> {
+public class SaveChangesServiceImpl<E, ID>
+        implements SaveChangesService<E> {
 
     private final JpaRepository<E, ID> repository;
 
@@ -29,7 +28,6 @@ public class SaveChangesServiceImpl<E, ID> implements SaveChangesService<E> {
         try {
             return Optional.of(repository.save(entity));
         } catch (OptimisticLockingFailureException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
             throw new InternalServerErrorException();
         }
     }

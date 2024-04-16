@@ -2,7 +2,7 @@ package com.aptech.gear.product.api;
 
 import com.aptech.gear.product.api.request.CreateProductRequest;
 import com.aptech.gear.product.api.response.ProductInformation;
-import com.aptech.gear.product.data.ProductService;
+import com.aptech.gear.product.service.ProductService;
 import com.aptech.gear.product.domain.Product;
 import com.aptech.gear.util.PaginatedList;
 import com.aptech.gear.util.PaginationParameter;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,7 +29,7 @@ public class ProductRestController {
 	private final ProductInformation.Mapper mapper;
 
 	@GetMapping(ENDPOINT_GET_LIST)
-	public ResponseEntity<Map<String, Object>> getAll(
+	public ResponseEntity<PaginatedList<ProductInformation>> getAll(
 			@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "10") Integer size) {
 
@@ -39,7 +38,7 @@ public class ProductRestController {
 		);
 
 		return ResponseEntity.ok(
-				products.map(mapper::map).toJson()
+				products.map(mapper::map)
 		);
 	}
 

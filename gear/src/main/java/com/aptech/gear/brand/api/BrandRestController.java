@@ -2,7 +2,7 @@ package com.aptech.gear.brand.api;
 
 import com.aptech.gear.brand.api.request.ModifyBrandRequest;
 import com.aptech.gear.brand.api.response.BrandInformation;
-import com.aptech.gear.brand.data.BrandService;
+import com.aptech.gear.brand.service.BrandService;
 import com.aptech.gear.brand.domain.Brand;
 import com.aptech.gear.util.PaginatedList;
 import com.aptech.gear.util.PaginationParameter;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,7 +53,7 @@ public class BrandRestController {
 	}
 
 	@GetMapping(ENDPOINT_GET_LIST)
-	public ResponseEntity<Map<String, Object>> getAll(
+	public ResponseEntity<PaginatedList<BrandInformation>> getAll(
 			@RequestParam(defaultValue = "1") Integer page,
 			@RequestParam(defaultValue = "10") Integer size) {
 
@@ -62,7 +61,7 @@ public class BrandRestController {
 				new PaginationParameter(page, size));
 
 		return ResponseEntity.ok(
-				brands.map(brandInformationMapper::map).toJson()
+				brands.map(brandInformationMapper::map)
 		);
 	}
 

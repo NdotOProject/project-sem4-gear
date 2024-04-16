@@ -8,7 +8,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FieldMapping {
-	String name() default "";
+    String name() default "";
 
-	String transformer() default "";
+    FieldTransformer transformer()
+            default @FieldTransformer(name = "");
+
+    boolean reverse() default false;
 }

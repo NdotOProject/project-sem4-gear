@@ -1,4 +1,4 @@
-package com.aptech.gear.product.data;
+package com.aptech.gear.product.repository;
 
 import com.aptech.gear.product.domain.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;

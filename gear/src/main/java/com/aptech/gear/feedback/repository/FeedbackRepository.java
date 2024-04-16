@@ -1,4 +1,4 @@
-package com.aptech.gear.feedback.data;
+package com.aptech.gear.feedback.repository;
 
 import com.aptech.gear.feedback.domain.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;

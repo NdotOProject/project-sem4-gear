@@ -3,6 +3,7 @@ package com.aptech.gear.brand.api.response;
 import com.aptech.gear.brand.domain.Brand;
 import com.aptech.gear.product.domain.Product;
 import com.aptech.gear.util.FieldMapping;
+import com.aptech.gear.util.FieldTransformer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,13 @@ public class BrandInformation {
 	@FieldMapping
 	private String description;
 
-	@FieldMapping(transformer = "transformProduct")
+	@FieldMapping(
+			transformer = @FieldTransformer(
+					name = "transformProduct",
+					provider = BrandInfoMapper.class,
+					paramTypes = Set.class
+			)
+	)
 	private Set<Long> products;
 
 	public void transformProduct(Set<Product> products) {

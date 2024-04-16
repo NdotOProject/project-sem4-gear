@@ -1,4 +1,4 @@
-package com.aptech.gear.order.data;
+package com.aptech.gear.order.repository;
 
 import com.aptech.gear.order.domain.OrderDetail;
 import org.springframework.data.jpa.repository.JpaRepository;

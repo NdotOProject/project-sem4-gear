@@ -11,165 +11,170 @@ import java.util.stream.Stream;
 
 public class Mapper<S, D> {
 
-	private final Supplier<D> destinationProvider;
-	private final List<MappedField> mappedFields;
+    private final Supplier<D> consumer;
+    private final List<MappedField> mappedFields;
 
-	protected Mapper(
-			Class<S> sourceClass,
-			Supplier<D> destinationInstanceProvider) {
-		assert sourceClass != null;
-		assert destinationInstanceProvider != null;
-		assert destinationInstanceProvider.get() != null;
+    protected Mapper(Class<S> providerClass, Supplier<D> consumerInstanceProvider) {
+        assert providerClass != null;
+        assert consumerInstanceProvider != null;
+        assert consumerInstanceProvider.get() != null;
 
-		this.destinationProvider = destinationInstanceProvider;
+        this.consumer = consumerInstanceProvider;
 
-//		noinspection unchecked
-		this.mappedFields = readMappedFields(sourceClass,
-				(Class<D>) destinationProvider.get().getClass());
-	}
+        this.mappedFields = readMappedFields(providerClass, consumer.get().getClass());
+    }
 
-	private List<MappedField> readMappedFields(
-			Class<S> sourceClass, Class<D> destClass) {
-		final List<MappedField> result = new ArrayList<>();
+/*
+    !reverse -> field has been annotated is consumer;
+ */
+    private static List<MappedField> readMappedFields(Class<?> providerClass, Class<?> consumerClass) {
+        final List<MappedField> result = new ArrayList<>();
 
-		Stream.of(destClass.getDeclaredFields()).parallel()
-				.forEach(destField -> {
-					final FieldMapping requireAnnotation =
-							destField.getDeclaredAnnotation(
-									FieldMapping.class);
+        Stream.of(consumerClass.getDeclaredFields()).parallel()
+                .forEach(destField -> {
+                    final FieldMapping fieldMapping = destField.getDeclaredAnnotation(FieldMapping.class);
 
-					if (Objects.nonNull(requireAnnotation)) {
-						try {
-							final Field srcField
-									= sourceClass.getDeclaredField(
-									!requireAnnotation.name().isEmpty()
-											? requireAnnotation.name()
-											: destField.getName()
-							);
+                    if (Objects.nonNull(fieldMapping)) {
+                        try {
+                            final Field providerField = providerClass.getDeclaredField(
+                                    !fieldMapping.name().isEmpty()
+                                            ? fieldMapping.name()
+                                            : destField.getName()
+                            );
 
-							Method transformer = null;
+                            Method transformer = getTranfomerMethod(fieldMapping.transformer());
 
-							if (!requireAnnotation.transformer().isEmpty()) {
-								transformer = destClass.getDeclaredMethod(
-										requireAnnotation.transformer(),
-										srcField.getType()
-								);
+                            if (providerField.trySetAccessible()
+                                    && destField.trySetAccessible()) {
+                                result.add(new MappedField(
+                                        providerField, destField, transformer, fieldMapping.reverse()
+                                ));
+                            }
+                        } catch (NoSuchFieldException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
 
-								transformer = transformer.trySetAccessible()
-										              ? transformer
-										              : null;
-							}
+        return result;
+    }
 
-							if (srcField.trySetAccessible()
-									    && destField.trySetAccessible()) {
-								result.add(new MappedField(
-										srcField, destField, transformer
-								));
-							}
-						} catch (NoSuchFieldException |
-						         NoSuchMethodException e) {
-							throw new RuntimeException(e);
-						}
-					}
-				});
+    private static Method getTranfomerMethod(FieldTransformer transformer) {
+        if (!transformer.name().isEmpty()) {
+            try {
+                final Method method = transformer.provider()
+                        .getDeclaredMethod(transformer.name(), transformer.paramTypes());
+                return method.trySetAccessible() ? method : null;
+            } catch (NoSuchMethodException e) {
+                return null;
+            }
+        }
+        return null;
+    }
 
-		return result;
-	}
+    protected void handle(S src, D dest) {
+    }
 
-	protected void handle(S src, D dest) {
-	}
+    public final D map(S src) {
+        final D dest = consumer.get();
 
-	public final D map(S src) {
-		final D dest = destinationProvider.get();
+        if (!mappedFields.isEmpty()) {
+            mappedFields.stream().parallel()
+                    .forEach(mappedField -> mappedField.passValue(src, dest));
+        }
 
-		if (!mappedFields.isEmpty()) {
-			mappedFields.stream().parallel()
-					.forEach(mappedField -> mappedField.passValue(src, dest));
-		}
+        handle(src, dest);
 
-		handle(src, dest);
+        return dest;
+    }
 
-		return dest;
-	}
+    private static class MappedField {
 
-	private static class MappedField {
+        enum PassValueTypes {
+            // set value for field in transformer method.
+            IN_METHOD,
+            // use result return by transformer method to set value for field.
+            USE_RESULT,
+            // don't use transformer.
+            NONE,
+        }
 
-		enum PassValueTypes {
-			// set value for field in transformer method.
-			IN_METHOD,
-			// use result return by transformer method to set value for field.
-			USE_RESULT,
-			// don't use transformer.
-			NONE,
-		}
+        private final Field providerField, consumerField;
+        private final boolean useTransformer;
+        private final PassValueTypes passValueType;
+        private final Method transformer;
 
-		private final Field providerField, consumerField;
-		private final boolean useTransformer;
-		private final PassValueTypes passValueType;
-		private final Method transformer;
+        private MappedField(
+                Field providerField,
+                Field consumerField,
+                Method transformer,
+                boolean reverse) {
 
-		private MappedField(
-				Field providerField,
-				Field consumerField,
-				Method transformer) {
+            Objects.requireNonNull(providerField);
+            Objects.requireNonNull(consumerField);
 
-			this.providerField = Objects.requireNonNull(providerField);
-			this.consumerField = Objects.requireNonNull(consumerField);
+            if (reverse) {
+                this.providerField = consumerField;
+                this.consumerField = providerField;
+            } else {
+                this.providerField = providerField;
+                this.consumerField = consumerField;
+            }
 
-			// use transformer
-			if (Objects.nonNull(transformer)) {
+            // use transformer
+            if (Objects.nonNull(transformer)) {
 
-				//
-				if (Objects.equals(void.class, transformer.getReturnType())) {
-					this.passValueType = PassValueTypes.IN_METHOD;
-				}
-				//
-				else if (Objects.equals(
-						transformer.getReturnType(), consumerField.getType())) {
-					this.passValueType = PassValueTypes.USE_RESULT;
-				}
-				// invalid type will set to field
-				else {
-					this.passValueType = PassValueTypes.NONE;
-				}
+                //
+                if (Objects.equals(void.class, transformer.getReturnType())) {
+                    this.passValueType = PassValueTypes.IN_METHOD;
+                }
+                //
+                else if (Objects.equals(
+                        transformer.getReturnType(), consumerField.getType())) {
+                    this.passValueType = PassValueTypes.USE_RESULT;
+                }
+                // invalid type will set to field
+                else {
+                    this.passValueType = PassValueTypes.NONE;
+                }
 
-				this.transformer = passValueType != PassValueTypes.NONE
-						                   ? transformer
-						                   : null;
+                this.transformer = passValueType != PassValueTypes.NONE
+                        ? transformer
+                        : null;
 
-				useTransformer = Objects.nonNull(this.transformer);
-			}
-			// don't use transformer
-			else {
-				this.transformer = null;
-				this.useTransformer = false;
-				this.passValueType = PassValueTypes.NONE;
-			}
-		}
+                useTransformer = Objects.nonNull(this.transformer);
+            }
+            // don't use transformer
+            else {
+                this.transformer = null;
+                this.useTransformer = false;
+                this.passValueType = PassValueTypes.NONE;
+            }
+        }
 
-		void passValue(Object provider, Object consumer) {
-			try {
-				final Object value = providerField.get(provider);
+        void passValue(Object provider, Object consumer) {
+            try {
+                final Object value = providerField.get(provider);
 
-				// pass with transformer
-				if (useTransformer) {
-					switch (passValueType) {
-						case IN_METHOD -> transformer.invoke(consumer, value);
-						case USE_RESULT -> consumerField.set(
-								consumer, transformer.invoke(consumer, value)
-						);
-						case NONE -> {
-						}
-					}
-				}
-				// pass without transformer
-				else {
-					consumerField.set(consumer, value);
-				}
+                // pass with transformer
+                if (useTransformer) {
+                    switch (passValueType) {
+                        case IN_METHOD -> transformer.invoke(consumer, value);
+                        case USE_RESULT -> consumerField.set(
+                                consumer, transformer.invoke(consumer, value)
+                        );
+                        case NONE -> {
+                        }
+                    }
+                }
+                // pass without transformer
+                else {
+                    consumerField.set(consumer, value);
+                }
 
-			} catch (IllegalAccessException | InvocationTargetException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

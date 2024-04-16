@@ -1,4 +1,4 @@
-package com.aptech.gear.payment.data;
+package com.aptech.gear.payment.repository;
 
 import com.aptech.gear.payment.domain.PaymentMethod;
 import org.springframework.data.jpa.repository.JpaRepository;

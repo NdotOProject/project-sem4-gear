@@ -1,7 +1,7 @@
 package com.aptech.gear.product.api.request;
 
-import com.aptech.gear.brand.data.BrandRepository;
-import com.aptech.gear.product.data.ProductCategoryRepository;
+import com.aptech.gear.brand.repository.BrandRepository;
+import com.aptech.gear.product.repository.ProductCategoryRepository;
 import com.aptech.gear.product.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
