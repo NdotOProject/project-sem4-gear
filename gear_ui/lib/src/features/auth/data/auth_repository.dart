@@ -1,95 +1,90 @@
-import 'package:dio/dio.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_result.dart';
-import 'package:gear_ui/src/features/auth/domain/sign_in_user.dart';
+import 'package:gear_ui/src/features/auth/domain/sign_in_request.dart';
+import 'package:gear_ui/src/features/auth/domain/sign_up_request.dart';
+import 'package:gear_ui/src/features/auth/domain/sign_up_result.dart';
 import 'package:gear_ui/src/features/auth/domain/signed_in_user.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_user.dart';
+import 'package:gear_ui/src/local_storage/obj/users/cached_user.dart';
 import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
 import 'package:hive/hive.dart';
 
 class AuthRepository {
-  static const String _key = "user";
-
-  final Box<CachedUser> _userBox;
+  static late final AuthRepository? _instance;
 
   AuthRepository._(this._userBox);
 
   static Future<AuthRepository> get instance async {
-    return AuthRepository._(await CachedObjects.user);
+    _instance ??= AuthRepository._(await CachedObjects.user);
+    return _instance!;
   }
 
-  CachedUser? get _cached => _userBox.get(_key);
+  final Box<CachedUser> _userBox;
 
-  SignedInUser? get user => SignedInUser.fromCached(_cached);
+  Map<String, CachedUser> get _cached => {..._userBox.toMap()};
 
-  bool get isSignedIn => user != null;
+  SignedInUser? _signedInUser;
 
-  SignInUser get rememberedUser => SignInUser.fromCached(_cached);
+  SignedInUser? get user => _signedInUser;
 
-  void register({
-    required String email,
-    required String password,
-  }) {}
+  bool get isSignedIn => _signedInUser != null;
 
-  Future<SignInResult> signIn(SignInUser user) async {
-    // TODO: call api.
-    /*
-      {
-        "success": true | false,
-        "data": {
-          "id": 1,
-          "name": "Test",
-          "avatar": null | string,
-          "employee": true | false
-        },
-        "errors": {
-          "email": [
-            "abc",
-            "xyz"
-          ],
-          "password": [
-            "def",
-            "ghi"
-          ]
-        }
-      }
-     */
+  SignUpResult register(SignUpRequest request) {
+    var cachedUser = _cached[request.email];
 
-    bool validate() {
-      return user.email == "test@gmail.com" && user.password == "Test123";
+    if (cachedUser != null) {
+      return SignUpResult.failed(emailError: "Email exist.");
     }
 
-    final result = SignInResult.fromResponse(
-      Response<String>(
-        requestOptions: RequestOptions(),
-        extra: <String, dynamic>{
-          "success": validate(),
-          if (!validate())
-            "errors": {
-              "email": ["Incorrect email."],
-              "password": ["Incorrect password."],
-            }
-        },
-        data: validate()
-            ? """{
-                "id": 1,
-                "name": "Test",
-                "avatar": null,
-                "employee": false
-              }"""
-            : null,
-      ),
+    int nextId = 1;
+
+    final users = [..._userBox.values];
+    if (users.isNotEmpty) {
+      if (users.length >= 2) {
+        users.sort((cachedUser1, cachedUser2) {
+          return cachedUser1.id!.compareTo(cachedUser2.id!);
+        });
+      }
+
+      nextId = users.last.id! + 1;
+    }
+
+    final newUser = CachedUser(
+      id: nextId,
+      name: request.email,
+      email: request.email,
+      password: request.password,
     );
 
-    final resultUser = result.user;
+    _userBox.put(newUser.email, newUser);
 
-    resultUser?.remember = user.remember;
-    resultUser?.email = user.remember ? user.email : "";
-    resultUser?.password = user.remember ? user.password : "";
+    return SignUpResult.success(
+      SignInRequest.fromCached(newUser),
+    );
+  }
 
-    if (resultUser != null && resultUser.remember) {
-      _userBox.put(_key, resultUser);
+  SignInResult signIn(SignInRequest request) {
+    CachedUser? validate() {
+      var matched = _cached[request.email];
+
+      if (matched != null && matched.password == request.password) {
+        return matched;
+      } else {
+        return null;
+      }
     }
 
-    return result;
+    CachedUser? validatedResult = validate();
+
+    _signedInUser = SignedInUser.fromCached(validatedResult);
+
+    return validatedResult != null
+        ? SignInResult.success(user)
+        : SignInResult.failed(
+            emailError: "Incorrect email.",
+            passwordError: "Incorrect password.",
+          );
+  }
+
+  void signOut() {
+    _signedInUser = null;
   }
 }

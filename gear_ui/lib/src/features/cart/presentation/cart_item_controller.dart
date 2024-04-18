@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
 import 'package:gear_ui/src/features/product/data/product_repository.dart';
 import 'package:gear_ui/src/features/product_size/data/product_size_repository.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_product_size.dart';
+import 'package:gear_ui/src/local_storage/obj/cached_cart_item.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product_size.dart';
 
 class CartItemController extends GetxController {
   final Rx<CachedCartItem> item;

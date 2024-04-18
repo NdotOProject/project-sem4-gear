@@ -1,4 +1,4 @@
-import 'package:gear_ui/src/local_storage/objects/cached_user.dart';
+import 'package:gear_ui/src/local_storage/obj/users/cached_user.dart';
 
 class SignedInUser {
   int id;

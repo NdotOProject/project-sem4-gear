@@ -5,6 +5,7 @@ part 'cached_user.g.dart';
 @HiveType(typeId: CachedUser.typeId)
 class CachedUser extends HiveObject {
   static const int typeId = 5;
+  static const String boxName = "users";
 
   @HiveField(0)
   int? id;

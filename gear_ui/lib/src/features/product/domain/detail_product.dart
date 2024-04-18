@@ -1,4 +1,5 @@
-import 'package:gear_ui/src/local_storage/objects/cached_product.dart';
+
+import 'package:gear_ui/src/local_storage/obj/products/cached_product.dart';
 
 class DetailProduct {
   String name;

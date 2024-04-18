@@ -2,13 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // external packages
-import 'package:email_validator/email_validator.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // internal packages
 import 'package:gear_ui/src/features/auth/data/auth_repository.dart';
 import 'package:gear_ui/src/features/auth/domain/sign_in_result.dart';
-import 'package:gear_ui/src/features/auth/domain/sign_in_user.dart';
+import 'package:gear_ui/src/features/auth/domain/sign_in_request.dart';
+import 'package:gear_ui/src/features/auth/presentation/input_validators.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/nested_list_transformer.dart';
 import 'package:gear_ui/src/widgets/checkbox_form_field.dart';
@@ -24,6 +24,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  // view constants
   static const double _logoSize = 140.0;
   static const double _formPadding = 40.0;
   static const double _formElementGap = 10.0;
@@ -31,6 +32,7 @@ class _SignInState extends State<SignIn> {
   static const int _countSocialMediaButtonPerRow = 2;
   static const Size _buttonSize = Size.fromHeight(50.0);
 
+  // supported login with other ways.
   final List<_SocialMedia> _socialMediaWays = <_SocialMedia>[
     _SocialMedia(
       iconData: FontAwesomeIcons.facebookF,
@@ -62,42 +64,7 @@ class _SignInState extends State<SignIn> {
 
   // other data holders
   List<List<_SocialMedia>> _transformedSocialMediaWays = [];
-  SignInResult _signInResult = SignInResult();
-
-  String? get _extraEmailError =>
-      (_signInResult.emailErrors?.isNotEmpty ?? false)
-          ? (_signInResult.emailErrors?[0])
-          : null;
-
-  String? get _extraPasswordError =>
-      (_signInResult.passwordErrors?.isNotEmpty ?? false)
-          ? (_signInResult.passwordErrors?[0])
-          : null;
-
-  // form validators
-  String? _emailValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Email is required.";
-    } else if (!EmailValidator.validate(value)) {
-      return "Incorrect email format.";
-    }
-    return null;
-  }
-
-  String? _passwordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Password is required.";
-    } else if (value.length < 6) {
-      return "Password length must greater than or equals to 6.";
-    } else if (!RegExp(r'[a-z].*').hasMatch(value)) {
-      return "Password must contains lowercase characters.";
-    } else if (!RegExp(r'[A-Z].*').hasMatch(value)) {
-      return "Password must contains uppercase characters.";
-    } else if (!RegExp(r'[0-9].*').hasMatch(value)) {
-      return "Password must contains numeric characters.";
-    }
-    return null;
-  }
+  SignInResult _signInResult = SignInResult.unknown();
 
   // event handlers
   void _rememberChangeHandler(bool? value) {
@@ -108,8 +75,8 @@ class _SignInState extends State<SignIn> {
 
   Future<SignInResult> _signInHandler(BuildContext context) async {
     final repository = await AuthRepository.instance;
-    return await repository.signIn(
-      SignInUser(
+    return repository.signIn(
+      SignInRequest(
         email: _emailInputController.text,
         password: _passwordInputController.text,
         remember: _remember,
@@ -120,7 +87,9 @@ class _SignInState extends State<SignIn> {
   // navigators
   void _handleTapToForgotPassword() {}
 
-  void _handleTapToCreateNewAccount() {}
+  void _handleTapToCreateNewAccount(BuildContext context) {
+    AppRoutes.signUp.asDestination(context: context);
+  }
 
   void _redirectToPrivacyPage() {}
 
@@ -128,22 +97,11 @@ class _SignInState extends State<SignIn> {
   void initState() {
     super.initState();
 
-    void loadData() async {
-      final repository = await AuthRepository.instance;
-      final rememberedUser = repository.rememberedUser;
-
-      _emailInputController.text = rememberedUser.email;
-      _passwordInputController.text = rememberedUser.password;
-      _remember = rememberedUser.remember;
-    }
-
     setState(() {
       _transformedSocialMediaWays = NestedListTransformer(
         original: _socialMediaWays,
         nestedListLength: _countSocialMediaButtonPerRow,
       ).transformedList;
-
-      loadData();
     });
   }
 
@@ -194,17 +152,17 @@ class _SignInState extends State<SignIn> {
       fields: [
         TextFormField(
           controller: _emailInputController,
-          validator: _emailValidator,
+          validator: InputValidators.emailValidator,
           decoration: InputDecoration(
             labelText: "Email",
-            errorText: _extraEmailError,
+            errorText: _signInResult.emailError,
           ),
         ),
         PasswordFormField(
           controller: _passwordInputController,
-          validator: _passwordValidator,
+          validator: InputValidators.passwordValidator,
           decoration: InputDecoration(
-            errorText: _extraPasswordError,
+            errorText: _signInResult.passwordError,
           ),
         ),
         CheckboxFormField(
@@ -250,7 +208,9 @@ class _SignInState extends State<SignIn> {
               ),
             ),
             InkWell(
-              onTap: _handleTapToCreateNewAccount,
+              onTap: () {
+                _handleTapToCreateNewAccount(context);
+              },
               child: Text(
                 "Create new account",
                 style: TextStyle(

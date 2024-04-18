@@ -2,7 +2,7 @@
 import 'package:hive/hive.dart';
 
 // internal packages
-import 'package:gear_ui/src/local_storage/objects/cached_product_size.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product_size.dart';
 import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
 
 class ProductSizeRepository {

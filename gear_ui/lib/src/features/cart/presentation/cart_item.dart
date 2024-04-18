@@ -5,9 +5,9 @@ import 'package:gear_ui/src/features/cart/domain/cart_product.dart';
 import 'package:gear_ui/src/features/product/data/product_repository.dart';
 import 'package:gear_ui/src/features/product_color/data/product_color_repository.dart';
 import 'package:gear_ui/src/features/product_size/data/product_size_repository.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_product_color.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_product_size.dart';
+import 'package:gear_ui/src/local_storage/obj/cached_cart_item.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product_color.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product_size.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
@@ -47,7 +47,7 @@ class _CartItemState extends State<CartItem> {
 
   final _errorProduct = CartProduct(id: 0, name: '', price: 0, quantity: 0);
   final _errorSize = CachedProductSize(id: 0, name: "", productIds: []);
-  final _errorColor = CachedProductColor(id: 0, name: "", productIds: []);
+  final _errorColor = CachedProductColor(id: 0, name: "");
 
   CachedCartItem get _item => widget.item;
 

@@ -1,41 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cached_product_size.dart';
+part of 'cached_product_color.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CachedProductSizeAdapter extends TypeAdapter<CachedProductSize> {
+class CachedProductColorAdapter extends TypeAdapter<CachedProductColor> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
-  CachedProductSize read(BinaryReader reader) {
+  CachedProductColor read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CachedProductSize(
+    return CachedProductColor(
       id: fields[0] as int,
       name: fields[1] as String,
       description: fields[2] as String?,
-      productIds: (fields[3] as List).cast<int>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, CachedProductSize obj) {
+  void write(BinaryWriter writer, CachedProductColor obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.description)
-      ..writeByte(3)
-      ..write(obj.productIds);
+      ..write(obj.description);
   }
 
   @override
@@ -44,7 +41,7 @@ class CachedProductSizeAdapter extends TypeAdapter<CachedProductSize> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CachedProductSizeAdapter &&
+      other is CachedProductColorAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,33 +1,37 @@
 // external packages
+import 'package:gear_ui/src/features/auth/data/auth_repository.dart';
 import 'package:hive_flutter/adapters.dart';
 
 // internal packages
-import 'package:gear_ui/src/features/auth/domain/signed_in_user.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
+import 'package:gear_ui/src/local_storage/obj/cached_cart_item.dart';
 import 'package:gear_ui/src/local_storage/utils/cached_objects.dart';
 import 'package:gear_ui/src/utils/pagination_param.dart';
 
 class CartRepository {
-  final SignedInUser? _user;
-  final Box<CachedCartItem> _cartBox;
+  const CartRepository._(this._cartBox);
 
-  const CartRepository._(this._cartBox, this._user);
-
-  static Future<CartRepository> instance({SignedInUser? user}) async {
-    return CartRepository._(await CachedObjects.cart, user);
+  static Future<CartRepository> get instance async {
+    return CartRepository._(await CachedObjects.cart);
   }
+
+  final Box<CachedCartItem> _cartBox;
 
   List<CachedCartItem> get _cached => [..._cartBox.values];
 
-  bool get _isSignedIn => _user != null;
-
   Future<List<CachedCartItem>> findAll({PaginationParam? param}) async {
-    if (_isSignedIn) {
-      // TODO: call api with user id. => cache
+    final authRepository = await AuthRepository.instance;
+
+    if (authRepository.isSignedIn) {
+
+
+
       return [];
     } else {
-      // TODO: load from cached.
-      return _cached.toList();
+      if (param != null) {
+        return [..._cached.getRange(param.offset, param.nextOffset)];
+      }
+
+      return _cached;
     }
   }
 
@@ -41,7 +45,9 @@ class CartRepository {
   }
 
   Future<void> add(CachedCartItem item) async {
-    if (_isSignedIn) {
+    final authRepository = await AuthRepository.instance;
+
+    if (authRepository.isSignedIn) {
       // TODO: call api. => cache
     } else {
       final cachedItem = await findByProductId(item.productId);

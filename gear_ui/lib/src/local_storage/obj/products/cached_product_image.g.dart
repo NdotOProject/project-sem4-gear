@@ -1,41 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'cached_product_color.dart';
+part of 'cached_product_image.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CachedProductColorAdapter extends TypeAdapter<CachedProductColor> {
+class CachedProductImageAdapter extends TypeAdapter<CachedProductImage> {
   @override
-  final int typeId = 4;
+  final int typeId = 5;
 
   @override
-  CachedProductColor read(BinaryReader reader) {
+  CachedProductImage read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CachedProductColor(
+    return CachedProductImage(
       id: fields[0] as int,
-      name: fields[1] as String,
-      description: fields[2] as String?,
-      productIds: (fields[3] as List).cast<int>(),
+      url: fields[1] as String,
+      avatar: fields[2] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CachedProductColor obj) {
+  void write(BinaryWriter writer, CachedProductImage obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.url)
       ..writeByte(2)
-      ..write(obj.description)
-      ..writeByte(3)
-      ..write(obj.productIds);
+      ..write(obj.avatar);
   }
 
   @override
@@ -44,7 +41,7 @@ class CachedProductColorAdapter extends TypeAdapter<CachedProductColor> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CachedProductColorAdapter &&
+      other is CachedProductImageAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

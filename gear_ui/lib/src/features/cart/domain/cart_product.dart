@@ -1,5 +1,5 @@
 // internal packages
-import 'package:gear_ui/src/local_storage/objects/cached_product.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product.dart';
 
 class CartProduct {
   int id;
@@ -21,7 +21,7 @@ class CartProduct {
       id: cached.id,
       name: cached.name,
       price: cached.price,
-      quantity: cached.quantity,
+      quantity: 0,
     );
   }
 }

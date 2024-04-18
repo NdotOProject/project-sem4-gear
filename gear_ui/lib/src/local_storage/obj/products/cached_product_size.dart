@@ -4,7 +4,8 @@ part 'cached_product_size.g.dart';
 
 @HiveType(typeId: CachedProductSize.typeId)
 class CachedProductSize extends HiveObject {
-  static const int typeId = 3;
+  static const int typeId = 6;
+  static const String boxName = "productSizes";
 
   @HiveField(0)
   int id;

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 // internal packages
 import 'package:gear_ui/src/features/cart/data/cart_repository.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
+import 'package:gear_ui/src/local_storage/obj/cached_cart_item.dart';
 
 class CartPageController extends GetxController {
   final RxMap<int, CachedCartItem> _items = <int, CachedCartItem>{}.obs;
@@ -56,7 +56,7 @@ class CartPageController extends GetxController {
   }
 
   Future<void> addItem(int productId) async {
-    final repository = await CartRepository.instance();
+    final repository = await CartRepository.instance;
     final item = CachedCartItem(
       productId: productId,
     );
@@ -65,7 +65,7 @@ class CartPageController extends GetxController {
   }
 
   Future<void> fetchData() async {
-    final repository = await CartRepository.instance();
+    final repository = await CartRepository.instance;
     for (var item in await repository.findAll()) {
       _items[item.productId] = item;
       if (item.selected) {

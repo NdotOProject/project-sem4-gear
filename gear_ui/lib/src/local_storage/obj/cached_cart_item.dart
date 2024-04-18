@@ -7,24 +7,28 @@ class CachedCartItem extends HiveObject {
   static const int typeId = 2;
 
   @HiveField(0)
-  int productId;
+  int? id;
 
   @HiveField(1)
-  int quantity;
+  int productId;
 
   @HiveField(2)
-  bool selected;
+  int quantity;
 
   @HiveField(3)
-  int? sizeId;
+  bool selected;
 
   @HiveField(4)
-  int? colorId;
+  int? sizeId;
 
   @HiveField(5)
+  int? colorId;
+
+  @HiveField(6)
   double? price;
 
   CachedCartItem({
+    this.id,
     required this.productId,
     this.quantity = 1,
     this.selected = false,

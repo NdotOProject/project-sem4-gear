@@ -11,7 +11,7 @@ class PaginationParam {
     return (page - 1) * size;
   }
 
-  int get nextSize {
+  int get nextOffset {
     return offset + size;
   }
 }

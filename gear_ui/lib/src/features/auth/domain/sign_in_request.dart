@@ -1,18 +1,18 @@
-import 'package:gear_ui/src/local_storage/objects/cached_user.dart';
+import 'package:gear_ui/src/local_storage/obj/users/cached_user.dart';
 
-class SignInUser {
+class SignInRequest {
   String email;
   String password;
   bool remember;
 
-  SignInUser({
+  SignInRequest({
     required this.email,
     required this.password,
     required this.remember,
   });
 
-  factory SignInUser.fromCached(CachedUser? cached) {
-    return SignInUser(
+  factory SignInRequest.fromCached(CachedUser? cached) {
+    return SignInRequest(
       email: cached?.email ?? "",
       password: cached?.password ?? "",
       remember: cached?.remember ?? false,

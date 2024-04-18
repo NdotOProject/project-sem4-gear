@@ -4,7 +4,6 @@ import 'package:gear_ui/src/features/cart/presentation/page_controller.dart';
 
 // internal packages
 import 'package:gear_ui/src/features/product/domain/home_product.dart';
-import 'package:gear_ui/src/local_storage/objects/cached_cart_item.dart';
 import 'package:gear_ui/src/routes/app_routes.dart';
 import 'package:gear_ui/src/utils/assets_path.dart';
 import 'package:gear_ui/src/widgets/image_widget.dart';
@@ -33,7 +32,7 @@ class _HomeProductCardState extends State<HomeProductCard> {
   final CartPageController _cartController = Get.find();
 
   Future<CartRepository> get _cartRepository {
-    return CartRepository.instance();
+    return CartRepository.instance;
   }
 
   late bool _favorite;

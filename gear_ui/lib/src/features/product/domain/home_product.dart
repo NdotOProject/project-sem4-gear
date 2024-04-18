@@ -1,4 +1,4 @@
-import 'package:gear_ui/src/local_storage/objects/cached_product.dart';
+import 'package:gear_ui/src/local_storage/obj/products/cached_product.dart';
 
 class HomeProduct {
   int id;
@@ -21,7 +21,7 @@ class HomeProduct {
       name: cached.name,
       description: cached.description,
       price: cached.price,
-      avatar: cached.avatarImageUrl,
+      // avatar: cached.avatarImageUrl,
     );
   }
 
